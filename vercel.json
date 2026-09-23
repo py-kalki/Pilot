@@ -1,7 +1,0 @@
-{
-  "buildCommand": "cd Frontend/pilot-frontend && npm install && npm run build",
-  "outputDirectory": "Frontend/pilot-frontend/.next",
-  "installCommand": "cd Frontend/pilot-frontend && npm install",
-  "framework": "nextjs",
-  "devCommand": "cd Frontend/pilot-frontend && npm run dev"
-}
