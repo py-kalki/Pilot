@@ -8,10 +8,16 @@ import { generateKit } from "../pipeline/generateKit";
 import { IKitAppendixA } from "../models/Kit";
 
 export interface BatchInputCase {
-  id: string;
-  jd: string;
-  company_url: string;
+  id?: string;
+  jd?: string;
+  job_description?: string;
+  company?: string;
+  company_url?: string;
+  url?: string;
+  role?: string;
+  jobRole?: string;
   days?: number;
+  days_available?: number;
 }
 
 export interface BatchOutputError {
@@ -49,60 +55,74 @@ function extractRoleFromJd(jd: string): string {
  * Processes a single batch case and produces an Appendix A kit or failure entry
  */
 export async function processBatchCase(c: BatchInputCase): Promise<BatchOutputKitEntry> {
-  const role = extractRoleFromJd(c.jd);
-  const days = c.days || 5;
+  const caseId = c.id || c.company || "case-1";
+  const jdText = c.jd || c.job_description || "";
+  const role = c.role || c.jobRole || extractRoleFromJd(jdText);
+  const companyUrl = c.company_url || c.url || "";
+  const days = c.days || c.days_available || 5;
 
-  console.log(`\n[batch] Processing case "${c.id}" -> ${role} at ${c.company_url}`);
+  console.log(`\n[batch] Processing case "${caseId}" -> ${role} at ${companyUrl}`);
 
   try {
     let crawlData: CrawlResult;
     try {
-      crawlData = await crawlCompany(c.company_url, role);
+      if (companyUrl) {
+        crawlData = await crawlCompany(companyUrl, role);
+      } else {
+        crawlData = {
+          companyOverview: "",
+          careersPage: "",
+          jobListing: jdText,
+          careersFound: false,
+          jobRoleFound: Boolean(jdText),
+          pagesUsed: [],
+        };
+      }
     } catch (crawlErr) {
-      console.warn(`[batch] Crawl failed for ${c.company_url}:`, crawlErr);
+      console.warn(`[batch] Crawl failed for ${companyUrl}:`, crawlErr);
       crawlData = {
         companyOverview: "",
         careersPage: "",
-        jobListing: c.jd,
+        jobListing: jdText,
         careersFound: false,
-        jobRoleFound: Boolean(c.jd),
+        jobRoleFound: Boolean(jdText),
         pagesUsed: [],
       };
     }
 
     // If company is unreachable and no JD provided at all, mark as failed
-    if (!crawlData.companyOverview && !crawlData.careersPage && !c.jd) {
+    if (!crawlData.companyOverview && !crawlData.careersPage && !jdText) {
       return {
-        id: c.id,
+        id: caseId,
         status: "failed",
         kit: null,
         error: {
           code: "COMPANY_UNREACHABLE",
-          message: `Company site at ${c.company_url} was unreachable and no job description was supplied.`,
+          message: `Company site at ${companyUrl} was unreachable and no job description was supplied.`,
         },
       };
     }
 
     const kit = await generateKit({
       jobRole: role,
-      companyWebsite: c.company_url,
+      companyWebsite: companyUrl,
       crawlData,
-      directJdText: c.jd,
+      directJdText: jdText,
       days,
     });
 
     return {
-      id: c.id,
+      id: caseId,
       status: "ok",
       kit,
       error: null,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error(`[batch] Failed case ${c.id}:`, message);
+    console.error(`[batch] Failed case ${caseId}:`, message);
 
     return {
-      id: c.id,
+      id: caseId,
       status: "failed",
       kit: null,
       error: {

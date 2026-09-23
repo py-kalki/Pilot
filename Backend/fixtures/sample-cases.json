@@ -1,0 +1,37 @@
+[
+  {
+    "company": "Vercel",
+    "company_url": "https://vercel.com",
+    "role": "Senior Fullstack Engineer",
+    "job_description": "We are seeking a Senior Fullstack Engineer proficient in Next.js, React Server Components, TypeScript, and distributed systems. Requirements include 4+ years of TypeScript and React experience, understanding of edge runtime and serverless architectures, experience building high-throughput developer tools, and excellent team collaboration skills. Nice to have experience with Rust or Go.",
+    "days_available": 5
+  },
+  {
+    "company": "Stripe",
+    "company_url": "https://stripe.com",
+    "role": "Backend Infrastructure Engineer",
+    "job_description": "Join Stripe's Core Payments Infrastructure team. Requirements: 5+ years building distributed, fault-tolerant backend services in Java, Go, or Ruby. Deep experience with PostgreSQL, distributed transaction guarantees (ACID, 2PC, Saga), idempotency, and high-availability design (99.999% uptime). Must have strong communication skills and experience leading technical projects. Bonus: Experience with financial ledger systems and PCI compliance.",
+    "days_available": 5
+  },
+  {
+    "company": "Figma",
+    "company_url": "https://figma.com",
+    "role": "Frontend Systems Architect",
+    "job_description": "Figma is looking for a Frontend Systems Architect to drive the next generation of collaborative canvas tools. Minimum Qualifications: 6+ years of advanced JavaScript/TypeScript and web graphics engineering (WebGL, WebAssembly, Canvas API). Deep expertise in browser rendering engines, memory optimization, reactive state management, and real-time CRDT multiplayer sync. Nice to have: Experience with C++ to Wasm compilation pipelines and WebGPU.",
+    "days_available": 4
+  },
+  {
+    "company": "Databricks",
+    "company_url": "https://databricks.com",
+    "role": "Machine Learning Platform Engineer",
+    "job_description": "We are looking for an ML Platform Engineer to build scalable infrastructure for training and deploying foundation models. Requirements: 4+ years developing distributed Python/C++ systems, deep familiarity with PyTorch, CUDA, Kubernetes orchestration, and model serving runtimes (Triton, vLLM). Experience with MLflow, data pipelines, and telemetry logging is required. Preferred: Contributions to open-source LLM/GenAI ecosystems.",
+    "days_available": 5
+  },
+  {
+    "company": "Cloudflare",
+    "company_url": "https://cloudflare.com",
+    "role": "Systems & Edge Security Engineer",
+    "job_description": "Cloudflare is seeking an Edge Systems Engineer. Requirements: Strong proficiency in Rust, C, or Go; deep understanding of Linux networking stack, eBPF, TCP/IP, TLS, and DDoS mitigation strategies. Experience building low-latency edge services deployed globally across thousands of servers. Excellent problem-solving skills under operational incidents. Pluses: Prior experience in network security research, DNS protocols, or kernel development.",
+    "days_available": 3
+  }
+]

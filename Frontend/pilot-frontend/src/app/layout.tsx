@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   description:
     "Pilot generates a personalized, editable, practice-ready interview prep kit from your job description in minutes.",
   metadataBase: new URL("https://app.usepilot.lat"),
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
   openGraph: {
     title: "Pilot — AI Interview Prep",
     description:

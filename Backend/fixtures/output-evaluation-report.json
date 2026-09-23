@@ -1,0 +1,1445 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-09-23T11:06:33.588Z",
+  "kits": [
+    {
+      "id": "Vercel",
+      "status": "ok",
+      "kit": {
+        "source": {
+          "company": "Vercel",
+          "company_url": "https://vercel.com",
+          "role": "Senior Fullstack Engineer",
+          "location": "Remote / Unspecified",
+          "jd_chars": 388,
+          "researched_at": "2026-09-23T11:04:49.060Z",
+          "pages_used": [
+            "https://vercel.com",
+            "https://vercel.com/careers",
+            "https://vercel.com/careers/design-engineer-us-6129441004"
+          ]
+        },
+        "company_brief": {
+          "summary": "Vercel provides a cloud platform for developers to build, deploy, and scale web applications and AI agents, offering features like serverless functions, global delivery, and infrastructure for agentic workflows. The company emphasizes a culture of shipping, as evidenced by their \"Ship what's Next\" career messaging. They maintain a global presence with open roles across engineering, sales, and marketing in locations including San Francisco, New York, Austin, London, and Berlin. Their platform is designed to support applications ranging from startups to large-scale enterprise platforms.",
+          "what_they_do": "Vercel delivers innovative solutions in its target industry, prioritizing engineering excellence and customer impact.",
+          "sources": [
+            "https://vercel.com",
+            "https://vercel.com/careers"
+          ]
+        },
+        "role": {
+          "title": "Senior Fullstack Engineer",
+          "seniority": "Senior",
+          "responsibilities": [
+            "Deliver high-impact features and technical capabilities for the Senior Fullstack Engineer track.",
+            "Collaborate with product, engineering, and cross-functional teams to solve technical challenges.",
+            "Ensure scalability, reliability, and code quality across deliverables."
+          ],
+          "requirements": [
+            {
+              "id": "r1",
+              "text": "Proficiency in Next.js",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r2",
+              "text": "Proficiency in React Server Components",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r3",
+              "text": "Proficiency in TypeScript",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r4",
+              "text": "Proficiency in distributed systems",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r5",
+              "text": "4+ years of TypeScript experience",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r6",
+              "text": "4+ years of React experience",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r7",
+              "text": "Understanding of edge runtime",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r8",
+              "text": "Understanding of serverless architectures",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r9",
+              "text": "Experience building high-throughput developer tools",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r10",
+              "text": "Excellent team collaboration skills",
+              "kind": "behavioural",
+              "priority": "must"
+            },
+            {
+              "id": "r11",
+              "text": "Experience with Rust",
+              "kind": "technical",
+              "priority": "nice"
+            },
+            {
+              "id": "r12",
+              "text": "Experience with Go",
+              "kind": "technical",
+              "priority": "nice"
+            }
+          ]
+        },
+        "questions": [
+          {
+            "id": "q1",
+            "requirement_ids": [
+              "r1",
+              "r2"
+            ],
+            "category": "technical",
+            "prompt": "How do you approach data fetching and state management when leveraging React Server Components (RSC) in a Next.js application to minimize client-side bundle size?",
+            "answer_outline": "1. Explain the boundary between Server and Client components. 2. Discuss moving data fetching logic to the server using async/await in RSCs. 3. Explain the use of 'use client' only where interactivity is required. 4. Mention trade-offs: reduced hydration cost vs. potential for increased server load. 5. Discuss streaming with Suspense for improved perceived performance.",
+            "difficulty": 1
+          },
+          {
+            "id": "q2",
+            "requirement_ids": [
+              "r4",
+              "r7",
+              "r8",
+              "r9"
+            ],
+            "category": "system-design",
+            "prompt": "Given Vercel's focus on global delivery, how would you design a high-throughput developer tool that utilizes the edge runtime to reduce latency for global users?",
+            "answer_outline": "1. Architecture: Use Vercel Edge Functions for low-latency execution. 2. Data: Discuss global data replication (e.g., Vercel KV or global databases). 3. Performance: Explain the trade-offs of the V8 isolate-based edge runtime (limited memory/execution time). 4. Scalability: Discuss handling high throughput via stateless design and avoiding cold starts. 5. Monitoring: Emphasize observability at the edge.",
+            "difficulty": 2
+          },
+          {
+            "id": "q3",
+            "requirement_ids": [
+              "r9",
+              "r10"
+            ],
+            "category": "behavioural",
+            "prompt": "Vercel's culture emphasizes 'Ship what's Next.' Describe a time you had to balance the need for rapid feature delivery with the technical debt inherent in high-throughput systems.",
+            "answer_outline": "1. Situation: Describe a high-pressure deadline for a developer tool. 2. Task: Explain the trade-off between shipping fast and maintaining system stability. 3. Action: Detail how you prioritized critical paths, implemented automated testing, and communicated debt to the team. 4. Result: Quantify the impact (e.g., uptime, throughput) and how you managed the debt later.",
+            "difficulty": 3
+          },
+          {
+            "id": "q4",
+            "requirement_ids": [
+              "r3",
+              "r5",
+              "r8"
+            ],
+            "category": "technical",
+            "prompt": "Vercel provides infrastructure for AI agents and complex web applications. How would you leverage TypeScript's advanced type system to ensure type safety across a distributed system involving multiple microservices or serverless functions?",
+            "answer_outline": "1. Shared Types: Discuss using monorepos to share type definitions between services. 2. Schema Validation: Mention tools like Zod or TypeBox for runtime validation of API boundaries. 3. Generics: Explain using generics to handle polymorphic data structures. 4. Trade-offs: Balance strictness vs. development velocity. 5. Tooling: Mention TypeScript's role in catching integration errors before deployment.",
+            "difficulty": 1
+          },
+          {
+            "id": "q5",
+            "requirement_ids": [
+              "r8",
+              "r9"
+            ],
+            "category": "company-fit",
+            "prompt": "Vercel is expanding its global presence and infrastructure for AI agents. How do you see the evolution of serverless architectures impacting the way developers build and deploy these agents, and how would you contribute to that vision?",
+            "answer_outline": "1. Vision: Discuss the shift from monolithic backends to event-driven, agentic workflows. 2. Impact: Explain how serverless allows for infinite scaling of agent tasks. 3. Contribution: Connect your experience in high-throughput tools to building the primitives (SDKs, infrastructure) that make this easier for Vercel customers. 4. Alignment: Reference the 'Ship what's Next' philosophy by focusing on developer experience (DX) and speed.",
+            "difficulty": 2
+          },
+          {
+            "id": "q6",
+            "requirement_ids": [
+              "r6"
+            ],
+            "category": "technical",
+            "prompt": "Reflecting on your 4+ years of React experience, how have you seen the ecosystem evolve from class components to modern hooks and concurrent features, and how do you decide when to adopt new patterns versus maintaining legacy code?",
+            "answer_outline": "Discuss the shift from lifecycle methods to functional components and hooks. Mention performance optimization techniques like memoization (useMemo, useCallback) and code splitting. Address the trade-offs of migrating legacy class components versus wrapping them. Emphasize architectural decisions like state management (Context API vs Redux/Zustand) and the importance of maintainability over chasing the latest trends.",
+            "difficulty": 3
+          },
+          {
+            "id": "q7",
+            "requirement_ids": [
+              "r11"
+            ],
+            "category": "technical",
+            "prompt": "Given your experience with Rust, how do you leverage its ownership and borrowing model to prevent memory leaks or data races in high-performance applications, and how does this influence the way you write code in other languages?",
+            "answer_outline": "Explain the concept of ownership, borrowing, and lifetimes. Discuss how the compiler enforces memory safety without a garbage collector. Highlight the performance benefits of zero-cost abstractions. Explain how this mindset encourages writing more defensive and explicit code in other languages, such as being more conscious of object lifecycles and resource management.",
+            "difficulty": 1
+          },
+          {
+            "id": "q8",
+            "requirement_ids": [
+              "r12"
+            ],
+            "category": "technical",
+            "prompt": "In your experience with Go, how do you approach building concurrent services using goroutines and channels, and how do you handle error propagation in a language that lacks traditional exception handling?",
+            "answer_outline": "Discuss the CSP (Communicating Sequential Processes) model. Explain the use of goroutines for lightweight concurrency and channels for safe communication. Contrast this with shared-memory concurrency. Explain the 'if err != nil' pattern, emphasizing why explicit error handling leads to more robust and readable code compared to try-catch blocks. Mention the use of context for cancellation and timeouts in distributed systems.",
+            "difficulty": 2
+          }
+        ],
+        "flashcards": [
+          {
+            "id": "f1",
+            "front": "How do React Server Components (RSC) minimize client-side bundle size?",
+            "back": "RSCs execute exclusively on the server, allowing large dependencies to remain server-side and preventing them from being sent to the client, resulting in smaller JavaScript bundles.",
+            "requirement_ids": [
+              "r2"
+            ]
+          },
+          {
+            "id": "f2",
+            "front": "What is the primary benefit of using an edge runtime for global applications?",
+            "back": "It allows code to execute in locations geographically closer to the user, significantly reducing latency by minimizing the round-trip time for requests.",
+            "requirement_ids": [
+              "r7"
+            ]
+          },
+          {
+            "id": "f3",
+            "front": "How can TypeScript ensure type safety across distributed microservices?",
+            "back": "By sharing common type definitions via monorepos or NPM packages, and using tools like Zod or TypeBox to validate runtime data against those TypeScript interfaces at service boundaries.",
+            "requirement_ids": [
+              "r3"
+            ]
+          },
+          {
+            "id": "f4",
+            "front": "What is the core advantage of Rust's ownership and borrowing model?",
+            "back": "It enforces memory safety at compile-time without a garbage collector, preventing common bugs like null pointer dereferences, data races, and memory leaks.",
+            "requirement_ids": [
+              "r11"
+            ]
+          },
+          {
+            "id": "f5",
+            "front": "How do you handle error propagation in Go?",
+            "back": "Go uses explicit error return values (the 'result, error' pattern) rather than exceptions, requiring developers to check and handle errors immediately after the function call.",
+            "requirement_ids": [
+              "r12"
+            ]
+          },
+          {
+            "id": "f6",
+            "front": "What is the main trade-off when adopting new React patterns vs. maintaining legacy code?",
+            "back": "The trade-off is between developer velocity and performance gains from new features versus the cost of refactoring, testing, and potential regression risks in established codebases.",
+            "requirement_ids": [
+              "r6"
+            ]
+          },
+          {
+            "id": "f7",
+            "front": "How do serverless architectures impact developer workflows for AI agents?",
+            "back": "They enable event-driven, auto-scaling execution environments that allow developers to deploy individual agent logic as isolated functions without managing underlying infrastructure.",
+            "requirement_ids": [
+              "r8"
+            ]
+          },
+          {
+            "id": "f8",
+            "front": "What is a key strategy for managing technical debt in high-throughput systems?",
+            "back": "Prioritize modular architecture and automated testing to allow for iterative refactoring, ensuring that rapid feature delivery does not compromise system stability or observability.",
+            "requirement_ids": [
+              "r9"
+            ]
+          }
+        ],
+        "schedule": {
+          "days_available": 5,
+          "days": [
+            {
+              "day": 1,
+              "focus": "Foundations, Architecture & Core Skills",
+              "question_ids": [
+                "q1",
+                "q2"
+              ],
+              "minutes": 50
+            },
+            {
+              "day": 2,
+              "focus": "Day 2 Targeted Practice & Spaced Repetition",
+              "question_ids": [
+                "q3",
+                "q4"
+              ],
+              "minutes": 50
+            },
+            {
+              "day": 3,
+              "focus": "Deep Dive Scenarios, System Design & Edge Cases",
+              "question_ids": [
+                "q5",
+                "q6"
+              ],
+              "minutes": 50
+            },
+            {
+              "day": 4,
+              "focus": "Day 4 Targeted Practice & Spaced Repetition",
+              "question_ids": [
+                "q7",
+                "q8"
+              ],
+              "minutes": 50
+            },
+            {
+              "day": 5,
+              "focus": "Mock Interview Simulation, Behavioral & Final Revision",
+              "question_ids": [
+                "q5"
+              ],
+              "minutes": 35
+            }
+          ]
+        },
+        "coverage": {
+          "uncovered_requirement_ids": [],
+          "passes": 2
+        }
+      },
+      "error": null
+    },
+    {
+      "id": "Stripe",
+      "status": "ok",
+      "kit": {
+        "source": {
+          "company": "Stripe",
+          "company_url": "https://stripe.com",
+          "role": "Backend Infrastructure Engineer",
+          "location": "Remote / Unspecified",
+          "jd_chars": 443,
+          "researched_at": "2026-09-23T11:05:18.684Z",
+          "pages_used": [
+            "https://stripe.com",
+            "https://stripe.com/careers"
+          ]
+        },
+        "company_brief": {
+          "summary": "Stripe provides financial infrastructure for businesses, offering tools to accept payments, manage billing, issue cards, and handle revenue models globally. The company supports over 135 currencies and payment methods, positioning itself as the backbone of global commerce for businesses ranging from startups to large enterprises. While the provided pages focus heavily on product capabilities and customer success stories, they highlight a strong emphasis on technical reliability, maintaining 99.999% historical uptime for their services. Prospective candidates should note that the company is actively focused on building economic infrastructure for AI and agentic commerce.",
+          "what_they_do": "Stripe delivers innovative solutions in its target industry, prioritizing engineering excellence and customer impact.",
+          "sources": [
+            "https://stripe.com",
+            "https://stripe.com/careers"
+          ]
+        },
+        "role": {
+          "title": "Backend Infrastructure Engineer",
+          "seniority": "Mid",
+          "responsibilities": [
+            "Deliver high-impact features and technical capabilities for the Backend Infrastructure Engineer track.",
+            "Collaborate with product, engineering, and cross-functional teams to solve technical challenges.",
+            "Ensure scalability, reliability, and code quality across deliverables."
+          ],
+          "requirements": [
+            {
+              "id": "r1",
+              "text": "5+ years building distributed, fault-tolerant backend services",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r2",
+              "text": "Proficiency in Java, Go, or Ruby",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r3",
+              "text": "Deep experience with PostgreSQL",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r4",
+              "text": "Experience with distributed transaction guarantees (ACID, 2PC, Saga)",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r5",
+              "text": "Experience with idempotency",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r6",
+              "text": "Experience with high-availability design (99.999% uptime)",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r7",
+              "text": "Strong communication skills",
+              "kind": "behavioural",
+              "priority": "must"
+            },
+            {
+              "id": "r8",
+              "text": "Experience leading technical projects",
+              "kind": "behavioural",
+              "priority": "must"
+            },
+            {
+              "id": "r9",
+              "text": "Experience with financial ledger systems",
+              "kind": "technical",
+              "priority": "nice"
+            },
+            {
+              "id": "r10",
+              "text": "Experience with PCI compliance",
+              "kind": "domain",
+              "priority": "nice"
+            }
+          ]
+        },
+        "questions": [
+          {
+            "id": "q1",
+            "requirement_ids": [
+              "r1",
+              "r4",
+              "r6"
+            ],
+            "category": "system-design",
+            "prompt": "Given Stripe's focus on 99.999% uptime, how would you design a distributed service to handle a sudden surge in payment traffic while ensuring data consistency across multiple regions?",
+            "answer_outline": "1. Define the architecture: Use a multi-region active-active setup. 2. Consistency strategy: Discuss trade-offs between synchronous replication (latency impact) vs. asynchronous (risk of data loss). 3. Fault tolerance: Implement circuit breakers, bulkhead patterns, and graceful degradation. 4. Transactional integrity: Explain the use of Saga patterns for cross-service consistency versus 2PC for local ACID transactions. 5. Monitoring: Mention observability (SLIs/SLOs) as the backbone of 99.999% uptime.",
+            "difficulty": 1
+          },
+          {
+            "id": "q2",
+            "requirement_ids": [
+              "r5",
+              "r9"
+            ],
+            "category": "technical",
+            "prompt": "Describe a scenario where you had to implement idempotency in a high-volume financial service. What were the challenges with race conditions?",
+            "answer_outline": "1. Define idempotency: The ability to make multiple identical requests without changing the result beyond the initial application. 2. Implementation: Use idempotency keys stored in a fast-access layer (e.g., Redis) or a dedicated database table. 3. Handling race conditions: Discuss optimistic locking or database-level unique constraints. 4. Trade-offs: Discuss the TTL of keys and the impact on storage. 5. Example: Explain a payment retry scenario where the client sends the same request twice due to network timeout.",
+            "difficulty": 2
+          },
+          {
+            "id": "q3",
+            "requirement_ids": [
+              "r4",
+              "r9",
+              "r10"
+            ],
+            "category": "company-fit",
+            "prompt": "Stripe is building infrastructure for agentic commerce. How would you handle distributed transaction guarantees if an AI agent initiates a multi-step financial workflow that spans several legacy and modern microservices?",
+            "answer_outline": "1. Contextualize: Acknowledge Stripe's role in agentic commerce. 2. Strategy: Propose the Saga pattern (orchestration vs. choreography) to manage long-running transactions. 3. Compliance: Address PCI-DSS requirements—ensure sensitive data is tokenized and not logged during the workflow. 4. Error handling: Explain compensating transactions (undoing steps if a later step fails). 5. Reliability: Emphasize how this maintains the 99.999% uptime goal by decoupling services.",
+            "difficulty": 3
+          },
+          {
+            "id": "q4",
+            "requirement_ids": [
+              "r3",
+              "r7",
+              "r8"
+            ],
+            "category": "behavioural",
+            "prompt": "Tell me about a time you led a technical project that required migrating a core database or service without downtime. How did you communicate the risks to stakeholders?",
+            "answer_outline": "1. Situation: Describe the project scope and the need for zero downtime. 2. Technical approach: Explain the 'blue-green' or 'canary' migration strategy using PostgreSQL logical replication. 3. Communication: Detail how you translated technical risks (e.g., replication lag, schema drift) into business impact (e.g., potential latency, data availability). 4. Outcome: Focus on the result and lessons learned regarding team coordination.",
+            "difficulty": 1
+          },
+          {
+            "id": "q5",
+            "requirement_ids": [
+              "r3",
+              "r6"
+            ],
+            "category": "technical",
+            "prompt": "In a distributed PostgreSQL environment, how do you manage schema migrations while maintaining high availability and ensuring no impact on performance?",
+            "answer_outline": "1. Strategy: Avoid 'ALTER TABLE' locks on large tables. 2. Techniques: Use tools like gh-ost or pt-online-schema-change to perform migrations in the background. 3. Best practices: Break migrations into multiple steps (e.g., add column, backfill data, update code, drop old column). 4. Monitoring: Mention tracking lock wait times and transaction throughput during the migration window.",
+            "difficulty": 2
+          },
+          {
+            "id": "q6",
+            "requirement_ids": [
+              "r2"
+            ],
+            "category": "technical",
+            "prompt": "Describe a complex feature you implemented in Java, Go, or Ruby. What were the language-specific challenges you faced, and how did you leverage the language's features to solve them?",
+            "answer_outline": "1. Context: Briefly describe the feature and the chosen language. 2. Language-specific implementation: Discuss how you utilized core features (e.g., Java's concurrency utilities/JVM tuning, Go's goroutines/channels/interfaces, or Ruby's metaprogramming/blocks). 3. Challenges: Explain a specific hurdle (e.g., memory management, performance bottlenecks, or thread safety). 4. Trade-offs: Contrast why this language was suitable compared to others. 5. Best Practices: Mention how you adhered to idiomatic patterns (e.g., Go's 'accept interfaces, return structs' or Java's SOLID principles).",
+            "difficulty": 3
+          }
+        ],
+        "flashcards": [
+          {
+            "id": "f1",
+            "front": "What are the primary strategies for achieving 99.999% uptime in distributed systems?",
+            "back": "Redundancy across regions, automated failover, graceful degradation, circuit breakers, and rigorous load testing to identify bottlenecks before they impact availability.",
+            "requirement_ids": [
+              "r6"
+            ]
+          },
+          {
+            "id": "f2",
+            "front": "How do you ensure idempotency in high-volume financial services?",
+            "back": "Use unique idempotency keys (e.g., UUIDs) stored in a persistent data store to track request status, ensuring that retried operations do not result in duplicate side effects.",
+            "requirement_ids": [
+              "r5"
+            ]
+          },
+          {
+            "id": "f3",
+            "front": "When should you use the Saga pattern versus 2PC for distributed transactions?",
+            "back": "Use 2PC for strong consistency within a single cluster where latency is low; use the Saga pattern for long-lived, multi-service workflows where eventual consistency is acceptable and locking resources is impractical.",
+            "requirement_ids": [
+              "r4"
+            ]
+          },
+          {
+            "id": "f4",
+            "front": "What are the key considerations for managing PostgreSQL schema migrations without downtime?",
+            "back": "Use additive changes (e.g., adding columns instead of renaming), perform migrations in multiple steps (deploy code that supports both old and new schemas), and use tools that support non-blocking DDL operations.",
+            "requirement_ids": [
+              "r3"
+            ]
+          },
+          {
+            "id": "f5",
+            "front": "How do you handle data consistency across multiple regions in a distributed system?",
+            "back": "Balance the CAP theorem trade-offs by choosing between synchronous replication (strong consistency, higher latency) and asynchronous replication (eventual consistency, lower latency), often using consensus algorithms like Paxos or Raft.",
+            "requirement_ids": [
+              "r1"
+            ]
+          },
+          {
+            "id": "f6",
+            "front": "What are the core requirements for maintaining PCI compliance in financial systems?",
+            "back": "Tokenization of sensitive data, strict access control (least privilege), encryption of data at rest and in transit, and comprehensive audit logging of all access to cardholder data.",
+            "requirement_ids": [
+              "r10"
+            ]
+          },
+          {
+            "id": "f7",
+            "front": "How do you effectively communicate technical risks to non-technical stakeholders during a major migration?",
+            "back": "Translate technical debt and risks into business impact (e.g., potential downtime, revenue loss), provide clear mitigation plans, and offer transparent progress tracking.",
+            "requirement_ids": [
+              "r7"
+            ]
+          },
+          {
+            "id": "f8",
+            "front": "What is the primary challenge when implementing idempotency in a concurrent environment?",
+            "back": "Race conditions where multiple threads attempt to process the same request simultaneously; solve this using distributed locks or atomic database operations (e.g., 'INSERT IGNORE' or 'UPSERT').",
+            "requirement_ids": [
+              "r5"
+            ]
+          }
+        ],
+        "schedule": {
+          "days_available": 5,
+          "days": [
+            {
+              "day": 1,
+              "focus": "Foundations, Architecture & Core Skills",
+              "question_ids": [
+                "q1",
+                "q2"
+              ],
+              "minutes": 50
+            },
+            {
+              "day": 2,
+              "focus": "Day 2 Targeted Practice & Spaced Repetition",
+              "question_ids": [
+                "q3",
+                "q4"
+              ],
+              "minutes": 50
+            },
+            {
+              "day": 3,
+              "focus": "Deep Dive Scenarios, System Design & Edge Cases",
+              "question_ids": [
+                "q5",
+                "q6"
+              ],
+              "minutes": 50
+            },
+            {
+              "day": 4,
+              "focus": "Day 4 Targeted Practice & Spaced Repetition",
+              "question_ids": [
+                "q4"
+              ],
+              "minutes": 35
+            },
+            {
+              "day": 5,
+              "focus": "Mock Interview Simulation, Behavioral & Final Revision",
+              "question_ids": [
+                "q5"
+              ],
+              "minutes": 35
+            }
+          ]
+        },
+        "coverage": {
+          "uncovered_requirement_ids": [],
+          "passes": 2
+        }
+      },
+      "error": null
+    },
+    {
+      "id": "Figma",
+      "status": "ok",
+      "kit": {
+        "source": {
+          "company": "Figma",
+          "company_url": "https://figma.com",
+          "role": "Frontend Systems Architect",
+          "location": "Remote / Unspecified",
+          "jd_chars": 445,
+          "researched_at": "2026-09-23T11:05:47.032Z",
+          "pages_used": [
+            "https://figma.com",
+            "https://figma.com/careers"
+          ]
+        },
+        "company_brief": {
+          "summary": "Figma provides a full-stack creative canvas that serves as a collaborative workspace for the entire product development process, from initial design to production. The platform emphasizes an AI-native approach, allowing teams and AI agents to work together within a shared context. It is widely adopted, with 95% of Fortune 500 companies using the tool to facilitate transparent and open design workflows. The company highlights a culture that values influence, inspiration, and honest input throughout project lifecycles.",
+          "what_they_do": "Figma delivers innovative solutions in its target industry, prioritizing engineering excellence and customer impact.",
+          "sources": [
+            "https://figma.com",
+            "https://figma.com/careers"
+          ]
+        },
+        "role": {
+          "title": "Frontend Systems Architect",
+          "seniority": "Mid",
+          "responsibilities": [
+            "Deliver high-impact features and technical capabilities for the Frontend Systems Architect track.",
+            "Collaborate with product, engineering, and cross-functional teams to solve technical challenges.",
+            "Ensure scalability, reliability, and code quality across deliverables."
+          ],
+          "requirements": [
+            {
+              "id": "r1",
+              "text": "6+ years of advanced JavaScript/TypeScript experience",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r2",
+              "text": "Web graphics engineering experience",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r3",
+              "text": "Proficiency with WebGL",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r4",
+              "text": "Proficiency with WebAssembly",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r5",
+              "text": "Proficiency with Canvas API",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r6",
+              "text": "Expertise in browser rendering engines",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r7",
+              "text": "Expertise in memory optimization",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r8",
+              "text": "Expertise in reactive state management",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r9",
+              "text": "Expertise in real-time CRDT multiplayer sync",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r10",
+              "text": "Experience with C++ to Wasm compilation pipelines",
+              "kind": "technical",
+              "priority": "nice"
+            },
+            {
+              "id": "r11",
+              "text": "Experience with WebGPU",
+              "kind": "technical",
+              "priority": "nice"
+            }
+          ]
+        },
+        "questions": [
+          {
+            "id": "q1",
+            "requirement_ids": [
+              "r2",
+              "r5",
+              "r6",
+              "r7"
+            ],
+            "category": "system-design",
+            "prompt": "Given Figma's reliance on a high-performance canvas, how would you architect a system to handle complex rendering of thousands of vector objects while maintaining 60fps, specifically addressing memory management and garbage collection pressure?",
+            "answer_outline": "1. Discuss the use of an offscreen canvas and a virtualized rendering layer to avoid DOM overhead. 2. Explain object pooling to minimize GC pressure. 3. Detail the use of TypedArrays (e.g., Float32Array) for storing geometry data to keep memory contiguous and outside the standard heap. 4. Mention spatial indexing (e.g., Quadtrees) to limit draw calls to the viewport. 5. Trade-offs: Balancing CPU-side calculation vs. GPU upload frequency.",
+            "difficulty": 1
+          },
+          {
+            "id": "q2",
+            "requirement_ids": [
+              "r4",
+              "r9"
+            ],
+            "category": "technical",
+            "prompt": "Explain how you would implement a real-time collaborative feature using CRDTs. What are the primary challenges when integrating this with a WebAssembly-based rendering engine?",
+            "answer_outline": "1. Define CRDTs (Conflict-free Replicated Data Types) and why they are preferred over OT for Figma's scale. 2. Describe the synchronization flow: local mutation -> CRDT update -> broadcast -> remote merge. 3. Discuss the bridge between JS and Wasm: how to pass state updates efficiently without excessive serialization overhead. 4. Address the 'source of truth' problem when the Wasm engine needs to re-render based on a state change arriving from a remote peer.",
+            "difficulty": 2
+          },
+          {
+            "id": "q3",
+            "requirement_ids": [
+              "r4",
+              "r6",
+              "r10"
+            ],
+            "category": "technical",
+            "prompt": "Figma is moving toward an AI-native workspace. How would you optimize a WebAssembly module that performs heavy computational tasks (like AI-driven layout suggestions) to ensure it doesn't block the main thread or degrade the user's interaction latency?",
+            "answer_outline": "1. Propose using Web Workers to offload Wasm execution from the main thread. 2. Discuss SharedArrayBuffer for zero-copy data sharing between the main thread and the worker. 3. Explain the importance of asynchronous Wasm compilation and instantiation. 4. Discuss balancing throughput vs. latency: when to use streaming compilation vs. pre-compilation. 5. Mention C++ optimization flags (e.g., -O3, LTO) for the Wasm pipeline.",
+            "difficulty": 3
+          },
+          {
+            "id": "q4",
+            "requirement_ids": [
+              "r1",
+              "r6"
+            ],
+            "category": "behavioural",
+            "prompt": "Figma's culture emphasizes 'honest input' and 'influence.' Can you describe a time you had to challenge a technical decision made by a senior peer or lead regarding a performance-critical component, and how you navigated that conversation?",
+            "answer_outline": "1. Situation: Identify a specific performance bottleneck (e.g., rendering pipeline inefficiency). 2. Task: Explain why the current approach was suboptimal. 3. Action: Describe the data-driven evidence you gathered (e.g., Chrome DevTools performance profiles, memory snapshots). 4. Result: How you presented the findings constructively to influence the team's direction without creating friction. 5. Emphasize the 'honest input' aspect by focusing on the product's success over personal ego.",
+            "difficulty": 1
+          },
+          {
+            "id": "q5",
+            "requirement_ids": [
+              "r3",
+              "r6",
+              "r11"
+            ],
+            "category": "company-fit",
+            "prompt": "Figma is used by 95% of Fortune 500 companies, meaning our users have vastly different hardware capabilities. How do you approach feature development when balancing the latest WebGPU capabilities with the need for broad compatibility across older browser engines?",
+            "answer_outline": "1. Acknowledge the need for a progressive enhancement strategy. 2. Discuss feature detection and the use of a fallback chain: WebGPU -> WebGL2 -> WebGL1 -> Canvas 2D. 3. Explain how to abstract the rendering backend so the core application logic remains agnostic of the underlying graphics API. 4. Mention the importance of performance monitoring across different user segments to ensure the 'Fortune 500' user experience remains consistent regardless of hardware.",
+            "difficulty": 2
+          },
+          {
+            "id": "q6",
+            "requirement_ids": [
+              "r8"
+            ],
+            "category": "technical",
+            "prompt": "How do you approach state management in a large-scale reactive application, and what are the trade-offs between using a centralized store versus localized reactive primitives?",
+            "answer_outline": "1. Define reactive state management (e.g., Observables, Signals, or Proxy-based state). 2. Discuss centralized stores (Redux/NgRx) vs. localized state (Signals/Hooks). 3. Trade-offs: Centralized offers predictability and debugging, while localized offers performance and reduced boilerplate. 4. Mention handling side effects (e.g., RxJS operators, effects). 5. Pitfalls: Over-engineering, memory leaks from subscriptions, and unnecessary re-renders.",
+            "difficulty": 3
+          }
+        ],
+        "flashcards": [
+          {
+            "id": "f1",
+            "front": "How do you maintain 60fps when rendering thousands of vector objects on a Canvas?",
+            "back": "Use spatial partitioning (e.g., quadtrees) for culling, offscreen canvas rendering, object pooling to minimize GC pressure, and batching draw calls to reduce state changes.",
+            "requirement_ids": [
+              "r1"
+            ]
+          },
+          {
+            "id": "f2",
+            "front": "What are the primary challenges when integrating CRDTs with a WebAssembly rendering engine?",
+            "back": "The main challenge is synchronizing the shared state between the JS-based CRDT implementation and the Wasm-based rendering engine without excessive data copying across the boundary; use SharedArrayBuffer where possible.",
+            "requirement_ids": [
+              "r9"
+            ]
+          },
+          {
+            "id": "f3",
+            "front": "How do you prevent heavy Wasm computational tasks from blocking the main thread?",
+            "back": "Offload heavy tasks to Web Workers, use asynchronous Wasm instantiation, and leverage SharedArrayBuffer for zero-copy data sharing between the worker and the main thread.",
+            "requirement_ids": [
+              "r4"
+            ]
+          },
+          {
+            "id": "f4",
+            "front": "How do you balance cutting-edge features like WebGPU with broad browser compatibility?",
+            "back": "Implement a feature-detection-based fallback strategy (e.g., WebGPU -> WebGL2 -> Canvas 2D) and use progressive enhancement to ensure core functionality remains available on older hardware.",
+            "requirement_ids": [
+              "r11"
+            ]
+          },
+          {
+            "id": "f5",
+            "front": "What are the trade-offs between centralized state stores and localized reactive primitives?",
+            "back": "Centralized stores offer a single source of truth and easier debugging/time-travel, while localized primitives reduce re-render scope and improve performance in high-frequency update scenarios.",
+            "requirement_ids": [
+              "r8"
+            ]
+          },
+          {
+            "id": "f6",
+            "front": "What is the typical C++ to Wasm compilation pipeline?",
+            "back": "Use Emscripten to compile C++ code, configure optimization flags (e.g., -O3), manage memory via the Wasm heap, and expose interfaces via WebIDL or Embind.",
+            "requirement_ids": [
+              "r10"
+            ]
+          },
+          {
+            "id": "f7",
+            "front": "How do you minimize garbage collection pressure in high-performance JS applications?",
+            "back": "Avoid frequent object allocation in render loops, use TypedArrays for data storage, reuse existing objects via pooling, and minimize closures that capture large scopes.",
+            "requirement_ids": [
+              "r7"
+            ]
+          }
+        ],
+        "schedule": {
+          "days_available": 4,
+          "days": [
+            {
+              "day": 1,
+              "focus": "Foundations, Architecture & Core Skills",
+              "question_ids": [
+                "q1",
+                "q2"
+              ],
+              "minutes": 50
+            },
+            {
+              "day": 2,
+              "focus": "Deep Dive Scenarios, System Design & Edge Cases",
+              "question_ids": [
+                "q3",
+                "q4"
+              ],
+              "minutes": 50
+            },
+            {
+              "day": 3,
+              "focus": "Day 3 Targeted Practice & Spaced Repetition",
+              "question_ids": [
+                "q5",
+                "q6"
+              ],
+              "minutes": 50
+            },
+            {
+              "day": 4,
+              "focus": "Mock Interview Simulation, Behavioral & Final Revision",
+              "question_ids": [
+                "q4"
+              ],
+              "minutes": 35
+            }
+          ]
+        },
+        "coverage": {
+          "uncovered_requirement_ids": [],
+          "passes": 2
+        }
+      },
+      "error": null
+    },
+    {
+      "id": "Databricks",
+      "status": "ok",
+      "kit": {
+        "source": {
+          "company": "Databricks",
+          "company_url": "https://databricks.com",
+          "role": "Machine Learning Platform Engineer",
+          "location": "Remote / Unspecified",
+          "jd_chars": 430,
+          "researched_at": "2026-09-23T11:06:12.030Z",
+          "pages_used": [
+            "https://databricks.com",
+            "https://databricks.com/careers"
+          ]
+        },
+        "company_brief": {
+          "summary": "Databricks provides a unified data and AI platform designed to help organizations build and run applications, agents, and AI models. Their core product, Lakebase, is described as a serverless Postgres solution that integrates data, AI, and governance into a single platform. The company serves a wide range of enterprise clients, including OpenAI, AT&T, and Toyota. While the provided pages highlight the company's focus on data intelligence and application development, they do not offer specific details regarding internal culture or hiring processes.",
+          "what_they_do": "Databricks delivers innovative solutions in its target industry, prioritizing engineering excellence and customer impact.",
+          "sources": [
+            "https://databricks.com",
+            "https://databricks.com/careers"
+          ]
+        },
+        "role": {
+          "title": "Machine Learning Platform Engineer",
+          "seniority": "Mid",
+          "responsibilities": [
+            "Deliver high-impact features and technical capabilities for the Machine Learning Platform Engineer track.",
+            "Collaborate with product, engineering, and cross-functional teams to solve technical challenges.",
+            "Ensure scalability, reliability, and code quality across deliverables."
+          ],
+          "requirements": [
+            {
+              "id": "r1",
+              "text": "4+ years developing distributed Python systems",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r2",
+              "text": "4+ years developing distributed C++ systems",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r3",
+              "text": "Deep familiarity with PyTorch",
+              "kind": "technical",
+              "priority": "nice"
+            },
+            {
+              "id": "r4",
+              "text": "CUDA proficiency",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r5",
+              "text": "Kubernetes orchestration",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r6",
+              "text": "Model serving runtimes (Triton)",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r7",
+              "text": "Model serving runtimes (vLLM)",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r8",
+              "text": "Experience with MLflow",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r9",
+              "text": "Data pipelines",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r10",
+              "text": "Telemetry logging",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r11",
+              "text": "Contributions to open-source LLM/GenAI ecosystems",
+              "kind": "technical",
+              "priority": "nice"
+            }
+          ]
+        },
+        "questions": [
+          {
+            "id": "q1",
+            "requirement_ids": [
+              "r4",
+              "r6",
+              "r7"
+            ],
+            "category": "technical",
+            "prompt": "When optimizing a model serving pipeline using Triton or vLLM, how do you manage memory contention between the host and GPU when handling high-throughput inference requests?",
+            "answer_outline": "1. Explain GPU memory management: Discuss pinned memory (page-locked) and DMA transfers. 2. Discuss vLLM specific optimizations: Explain PagedAttention and how it reduces KV cache fragmentation. 3. Discuss Triton: Mention dynamic batching and concurrent model execution. 4. Trade-offs: Latency vs. throughput; memory overhead of pre-allocation vs. dynamic allocation. 5. Pitfalls: Avoiding CPU-GPU synchronization bottlenecks.",
+            "difficulty": 1
+          },
+          {
+            "id": "q2",
+            "requirement_ids": [
+              "r2"
+            ],
+            "category": "behavioural",
+            "prompt": "Describe a time you had to debug a race condition or memory leak in a distributed C++ system. How did you isolate the issue in a multi-threaded environment?",
+            "answer_outline": "1. Situation: Describe a high-concurrency scenario. 2. Tools: Mention using Valgrind, AddressSanitizer, or GDB. 3. Process: Explain the use of thread-safe primitives (mutexes, atomics) or lock-free data structures. 4. Outcome: Quantify the performance improvement or stability gain. 5. Reflection: How you implemented better unit testing or static analysis to prevent recurrence.",
+            "difficulty": 2
+          },
+          {
+            "id": "q3",
+            "requirement_ids": [
+              "r5",
+              "r6",
+              "r7",
+              "r10"
+            ],
+            "category": "system-design",
+            "prompt": "Design a scalable model serving architecture for a LLM-based application on Kubernetes that ensures high availability and observability for enterprise clients like those Databricks serves.",
+            "answer_outline": "1. Infrastructure: Kubernetes HPA/VPA based on GPU metrics (DCGM). 2. Serving Layer: Deploying vLLM/Triton containers with sidecars for telemetry. 3. Data Flow: Integrating Kafka or similar for request/response logging. 4. Governance: Mentioning how to integrate with Lakehouse-style data governance. 5. Trade-offs: Cold start times vs. resource utilization; cost of multi-region deployment.",
+            "difficulty": 3
+          },
+          {
+            "id": "q4",
+            "requirement_ids": [
+              "r8",
+              "r9",
+              "r11"
+            ],
+            "category": "company-fit",
+            "prompt": "Databricks focuses on the 'Data Intelligence' platform. Given your experience with MLflow and data pipelines, how would you architect a system that ensures model lineage and reproducibility for a client deploying custom GenAI agents?",
+            "answer_outline": "1. Alignment: Acknowledge Databricks' focus on unified data and AI. 2. Strategy: Use MLflow for experiment tracking and model registry to ensure auditability. 3. Pipeline: Describe building robust ETL/ELT pipelines that feed clean, governed data into training/inference. 4. Open Source: Mention how your contributions to LLM ecosystems help bridge the gap between raw data and agentic behavior. 5. Value: Focus on how this creates trust for enterprise clients like OpenAI or Toyota.",
+            "difficulty": 1
+          },
+          {
+            "id": "q5",
+            "requirement_ids": [
+              "r1",
+              "r3"
+            ],
+            "category": "technical",
+            "prompt": "Explain the trade-offs between using PyTorch's native distributed data parallel (DDP) versus Fully Sharded Data Parallel (FSDP) when training large models on multi-node clusters.",
+            "answer_outline": "1. DDP: Explain how it replicates the model across GPUs; good for smaller models, high communication overhead. 2. FSDP: Explain parameter, gradient, and optimizer state sharding; essential for models that don't fit in single GPU memory. 3. Technical details: Discuss communication collectives (All-Gather, Reduce-Scatter). 4. Trade-offs: Training speed vs. memory efficiency. 5. Pitfalls: Communication bottlenecks in high-latency network environments.",
+            "difficulty": 2
+          }
+        ],
+        "flashcards": [
+          {
+            "id": "f1",
+            "front": "How do you manage memory contention between host and GPU in high-throughput inference?",
+            "back": "Implement request batching, use pinned memory for faster host-to-device transfers, optimize KV cache management, and utilize Triton/vLLM features like PagedAttention to reduce fragmentation.",
+            "requirement_ids": [
+              "r6"
+            ]
+          },
+          {
+            "id": "f2",
+            "front": "How do you isolate race conditions or memory leaks in distributed C++ systems?",
+            "back": "Use tools like Valgrind or AddressSanitizer (ASan) for leaks, ThreadSanitizer (TSan) for data races, and leverage distributed tracing to correlate logs across nodes.",
+            "requirement_ids": [
+              "r2"
+            ]
+          },
+          {
+            "id": "f3",
+            "front": "What are the key components of a scalable LLM serving architecture on Kubernetes?",
+            "back": "Use Horizontal Pod Autoscalers (HPA) based on custom metrics, multi-node GPU scheduling, load balancing with ingress controllers, and robust telemetry via Prometheus/Grafana.",
+            "requirement_ids": [
+              "r5"
+            ]
+          },
+          {
+            "id": "f4",
+            "front": "How do you ensure model lineage and reproducibility for GenAI agents using MLflow?",
+            "back": "Log model artifacts, environment dependencies, input datasets, and hyperparameter configurations; use MLflow Model Registry for versioning and tracking the full lifecycle from training to deployment.",
+            "requirement_ids": [
+              "r8"
+            ]
+          },
+          {
+            "id": "f5",
+            "front": "What are the trade-offs between PyTorch DDP and FSDP?",
+            "back": "DDP replicates the model on every GPU, which is simpler but memory-limited; FSDP shards model parameters, gradients, and optimizer states across GPUs, enabling training of much larger models at the cost of increased communication overhead.",
+            "requirement_ids": [
+              "r3"
+            ]
+          }
+        ],
+        "schedule": {
+          "days_available": 5,
+          "days": [
+            {
+              "day": 1,
+              "focus": "Foundations, Architecture & Core Skills",
+              "question_ids": [
+                "q1"
+              ],
+              "minutes": 35
+            },
+            {
+              "day": 2,
+              "focus": "Day 2 Targeted Practice & Spaced Repetition",
+              "question_ids": [
+                "q2"
+              ],
+              "minutes": 35
+            },
+            {
+              "day": 3,
+              "focus": "Deep Dive Scenarios, System Design & Edge Cases",
+              "question_ids": [
+                "q3"
+              ],
+              "minutes": 35
+            },
+            {
+              "day": 4,
+              "focus": "Day 4 Targeted Practice & Spaced Repetition",
+              "question_ids": [
+                "q4"
+              ],
+              "minutes": 35
+            },
+            {
+              "day": 5,
+              "focus": "Mock Interview Simulation, Behavioral & Final Revision",
+              "question_ids": [
+                "q5"
+              ],
+              "minutes": 35
+            }
+          ]
+        },
+        "coverage": {
+          "uncovered_requirement_ids": [],
+          "passes": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "id": "Cloudflare",
+      "status": "ok",
+      "kit": {
+        "source": {
+          "company": "Cloudflare",
+          "company_url": "https://cloudflare.com",
+          "role": "Systems & Edge Security Engineer",
+          "location": "Remote / Unspecified",
+          "jd_chars": 444,
+          "researched_at": "2026-09-23T11:06:33.588Z",
+          "pages_used": [
+            "https://cloudflare.com",
+            "https://cloudflare.com/careers"
+          ]
+        },
+        "company_brief": {
+          "summary": "Cloudflare provides a global platform for building, securing, and scaling applications, agents, and workforce infrastructure without the need for manual capacity planning. Their network operates in over 335 cities, aiming to reduce latency by running compute and security services close to users and data. The company serves a wide range of enterprise clients, including 45% of the Fortune 500, and emphasizes its role in powering a significant portion of the internet. Candidates interested in joining should visit their careers page to explore opportunities.",
+          "what_they_do": "Cloudflare delivers innovative solutions in its target industry, prioritizing engineering excellence and customer impact.",
+          "sources": [
+            "https://cloudflare.com",
+            "https://cloudflare.com/careers"
+          ]
+        },
+        "role": {
+          "title": "Systems & Edge Security Engineer",
+          "seniority": "Mid",
+          "responsibilities": [
+            "Deliver high-impact features and technical capabilities for the Systems & Edge Security Engineer track.",
+            "Collaborate with product, engineering, and cross-functional teams to solve technical challenges.",
+            "Ensure scalability, reliability, and code quality across deliverables."
+          ],
+          "requirements": [
+            {
+              "id": "r1",
+              "text": "Strong proficiency in Rust",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r2",
+              "text": "Strong proficiency in C",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r3",
+              "text": "Strong proficiency in Go",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r4",
+              "text": "Deep understanding of Linux networking stack",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r5",
+              "text": "Deep understanding of eBPF",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r6",
+              "text": "Deep understanding of TCP/IP",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r7",
+              "text": "Deep understanding of TLS",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r8",
+              "text": "Deep understanding of DDoS mitigation strategies",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r9",
+              "text": "Experience building low-latency edge services",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r10",
+              "text": "Experience deploying services globally across thousands of servers",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r11",
+              "text": "Excellent problem-solving skills under operational incidents",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r12",
+              "text": "Prior experience in network security research",
+              "kind": "technical",
+              "priority": "nice"
+            },
+            {
+              "id": "r13",
+              "text": "Prior experience in DNS protocols",
+              "kind": "technical",
+              "priority": "nice"
+            },
+            {
+              "id": "r14",
+              "text": "Prior experience in kernel development",
+              "kind": "technical",
+              "priority": "nice"
+            }
+          ]
+        },
+        "questions": [
+          {
+            "id": "q1",
+            "requirement_ids": [
+              "r1",
+              "r2",
+              "r9"
+            ],
+            "category": "technical",
+            "prompt": "When building low-latency edge services, how do you manage memory safety and performance trade-offs when transitioning from C to Rust, specifically regarding zero-cost abstractions?",
+            "answer_outline": "1. Discuss the overhead of C's manual memory management vs Rust's ownership model. 2. Explain how Rust's 'zero-cost abstractions' (like iterators or generics) compile down to machine code equivalent to hand-written C. 3. Mention the use of 'unsafe' blocks in Rust for performance-critical FFI or raw pointer manipulation. 4. Highlight the trade-off: Rust provides safety without runtime garbage collection, making it ideal for edge services where latency spikes are unacceptable.",
+            "difficulty": 1
+          },
+          {
+            "id": "q2",
+            "requirement_ids": [
+              "r4",
+              "r5",
+              "r8",
+              "r14"
+            ],
+            "category": "technical",
+            "prompt": "Describe a scenario where you would choose an eBPF-based solution over a traditional Linux kernel module for packet filtering or DDoS mitigation.",
+            "answer_outline": "1. Compare safety: eBPF is verified before execution, preventing kernel panics. 2. Compare flexibility: eBPF programs can be updated dynamically without rebooting. 3. Discuss performance: eBPF JIT compilation provides near-native speed. 4. Mention the 'XDP' (eXpress Data Path) hook for early-stage packet drop, which is critical for high-volume DDoS mitigation.",
+            "difficulty": 2
+          },
+          {
+            "id": "q3",
+            "requirement_ids": [
+              "r7",
+              "r9",
+              "r10"
+            ],
+            "category": "system-design",
+            "prompt": "Cloudflare operates in over 335 cities globally. How would you design a service to handle global state synchronization while maintaining low latency for TLS termination?",
+            "answer_outline": "1. Discuss the 'Anycast' network model for routing users to the nearest PoP. 2. Explain TLS termination at the edge to reduce round-trip times. 3. Address state synchronization: use local caching for session tickets/resumption and asynchronous replication for global state. 4. Discuss trade-offs between consistency (CAP theorem) and latency; prioritize eventual consistency for non-critical security metadata.",
+            "difficulty": 3
+          },
+          {
+            "id": "q4",
+            "requirement_ids": [
+              "r11",
+              "r13"
+            ],
+            "category": "behavioural",
+            "prompt": "Cloudflare powers a significant portion of the internet and serves 45% of the Fortune 500. How do you approach debugging a high-severity incident where a specific DNS misconfiguration is causing global traffic drops?",
+            "answer_outline": "1. Immediate mitigation: Rollback or traffic diversion (Anycast shift). 2. Diagnostic steps: Use observability tools (eBPF probes, packet captures) to isolate the faulty node/region. 3. Root cause analysis: Review recent deployments or configuration changes. 4. Communication: Transparent updates to stakeholders. 5. Post-mortem: Implement automated guardrails to prevent similar DNS misconfigurations.",
+            "difficulty": 1
+          },
+          {
+            "id": "q5",
+            "requirement_ids": [
+              "r8",
+              "r12"
+            ],
+            "category": "company-fit",
+            "prompt": "Given Cloudflare's mission to build a better internet, how would you leverage your experience in network security research to improve our current DDoS mitigation posture?",
+            "answer_outline": "1. Reference Cloudflare's specific scale (335+ cities). 2. Propose an improvement, such as implementing more granular, adaptive rate-limiting using eBPF. 3. Discuss how research into emerging attack vectors (e.g., amplification attacks, protocol-specific floods) informs proactive defense. 4. Connect this to the goal of protecting Fortune 500 clients by reducing the 'time-to-mitigation' for novel threats.",
+            "difficulty": 2
+          },
+          {
+            "id": "q6",
+            "requirement_ids": [
+              "r1",
+              "r2",
+              "r3",
+              "r9"
+            ],
+            "category": "technical",
+            "prompt": "In a high-throughput Go-based service, how do you handle the garbage collector (GC) impact on tail latency, and when would you offload logic to a C or Rust sidecar?",
+            "answer_outline": "1. Acknowledge Go's GC pauses and their impact on P99 latency. 2. Strategies: Object pooling (sync.Pool), minimizing heap allocations, and using manual memory management via CGO or Rust FFI for hot paths. 3. Trade-offs: Complexity of FFI vs. performance gains. 4. Conclusion: Use Go for control plane/orchestration and Rust/C for data plane/packet processing.",
+            "difficulty": 3
+          },
+          {
+            "id": "q7",
+            "requirement_ids": [
+              "r6"
+            ],
+            "category": "technical",
+            "prompt": "Explain the TCP three-way handshake process and describe what happens at the protocol level if the final ACK packet is lost.",
+            "answer_outline": "1. Explain the SYN, SYN-ACK, ACK sequence. 2. Discuss the state transitions (LISTEN, SYN-SENT, SYN-RECEIVED, ESTABLISHED). 3. Address the packet loss scenario: The server remains in SYN-RECEIVED state, retransmits the SYN-ACK based on its retransmission timer, and eventually times out if no ACK is received. 4. Mention the impact on the backlog queue (SYN flood risk). 5. Discuss the role of sequence numbers and window scaling in establishing the reliable connection.",
+            "difficulty": 1
+          }
+        ],
+        "flashcards": [
+          {
+            "id": "f1",
+            "front": "How do Rust's zero-cost abstractions compare to C when managing memory safety?",
+            "back": "Rust provides memory safety via ownership and borrowing without runtime garbage collection, allowing abstractions like iterators or generics to compile down to machine code equivalent to hand-written C, maintaining performance while eliminating common C memory vulnerabilities.",
+            "requirement_ids": [
+              "r1"
+            ]
+          },
+          {
+            "id": "f2",
+            "front": "Why choose eBPF over a Linux kernel module for packet filtering?",
+            "back": "eBPF provides safety through the verifier, preventing kernel panics, and allows for dynamic loading/unloading without rebooting the kernel, whereas kernel modules risk system instability and require full kernel recompilation or module loading.",
+            "requirement_ids": [
+              "r5"
+            ]
+          },
+          {
+            "id": "f3",
+            "front": "How do you mitigate GC-induced tail latency in high-throughput Go services?",
+            "back": "Optimize object allocation to reduce heap pressure, use sync.Pool for reuse, tune GOGC settings, or offload latency-critical hot paths to Rust/C sidecars via FFI to bypass the Go runtime's GC overhead.",
+            "requirement_ids": [
+              "r3"
+            ]
+          },
+          {
+            "id": "f4",
+            "front": "What happens if the final ACK in a TCP three-way handshake is lost?",
+            "back": "The server remains in SYN-RECEIVED state and will retransmit the SYN-ACK. The client, having sent the ACK, considers the connection established and may begin sending data, which the server will accept once it receives the retransmitted SYN-ACK or the delayed original ACK.",
+            "requirement_ids": [
+              "r6"
+            ]
+          },
+          {
+            "id": "f5",
+            "front": "What is the primary strategy for debugging global DNS-related traffic drops?",
+            "back": "Isolate the scope using telemetry to identify affected PoPs, verify DNSSEC chain validity, check for propagation delays in global state synchronization, and use packet captures to identify malformed responses or TTL-related caching issues.",
+            "requirement_ids": [
+              "r13"
+            ]
+          },
+          {
+            "id": "f6",
+            "front": "How do you maintain low-latency TLS termination in a globally distributed system?",
+            "back": "Use Anycast to route users to the nearest PoP, implement session resumption (TLS 1.3 0-RTT), and utilize hardware acceleration or optimized userspace TLS stacks to minimize handshake round-trips.",
+            "requirement_ids": [
+              "r7"
+            ]
+          },
+          {
+            "id": "f7",
+            "front": "What are key DDoS mitigation strategies at the edge?",
+            "back": "Use eBPF-based XDP for early packet dropping, rate limiting at the ingress, Anycast to distribute attack load across global PoPs, and behavioral analysis to distinguish legitimate traffic from volumetric botnets.",
+            "requirement_ids": [
+              "r8"
+            ]
+          }
+        ],
+        "schedule": {
+          "days_available": 3,
+          "days": [
+            {
+              "day": 1,
+              "focus": "Foundations, Architecture & Core Skills",
+              "question_ids": [
+                "q1",
+                "q2",
+                "q3"
+              ],
+              "minutes": 65
+            },
+            {
+              "day": 2,
+              "focus": "Deep Dive Scenarios, System Design & Edge Cases",
+              "question_ids": [
+                "q4",
+                "q5",
+                "q6"
+              ],
+              "minutes": 65
+            },
+            {
+              "day": 3,
+              "focus": "Mock Interview Simulation, Behavioral & Final Revision",
+              "question_ids": [
+                "q7"
+              ],
+              "minutes": 35
+            }
+          ]
+        },
+        "coverage": {
+          "uncovered_requirement_ids": [],
+          "passes": 2
+        }
+      },
+      "error": null
+    }
+  ]
+}

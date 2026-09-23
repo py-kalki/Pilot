@@ -88,6 +88,12 @@ export interface ICrawlData {
 
 export type KitStatus = "queued" | "crawling" | "analyzing" | "generating" | "done" | "error";
 
+export interface IKitProgress {
+  practiced_question_ids: string[];
+  completed_checklist_keys: string[];
+  last_studied_at?: Date;
+}
+
 export interface IKit extends Document {
   userId: string;
   name: string;
@@ -100,6 +106,7 @@ export interface IKit extends Document {
   statusMessage: string;
   crawlData: ICrawlData;
   kit: Partial<IKitAppendixA>;
+  progress?: IKitProgress;
   errorMessage?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -195,6 +202,11 @@ const KitSchema = new Schema<IKit>(
         uncovered_requirement_ids: [{ type: String }],
         passes: { type: Number },
       },
+    },
+    progress: {
+      practiced_question_ids: [{ type: String }],
+      completed_checklist_keys: [{ type: String }],
+      last_studied_at: { type: Date },
     },
     errorMessage: { type: String },
   },

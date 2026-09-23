@@ -1,0 +1,289 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-09-23T10:41:12.382Z",
+  "kits": [
+    {
+      "id": "Vercel",
+      "status": "ok",
+      "kit": {
+        "source": {
+          "company": "Vercel",
+          "company_url": "https://vercel.com",
+          "role": "Senior Fullstack Engineer",
+          "location": "Remote / Unspecified",
+          "jd_chars": 388,
+          "researched_at": "2026-09-23T10:41:12.381Z",
+          "pages_used": [
+            "https://vercel.com",
+            "https://vercel.com/careers",
+            "https://vercel.com/careers/design-engineer-us-6129441004"
+          ]
+        },
+        "company_brief": {
+          "summary": "Vercel provides infrastructure that helps users build agents, host platforms, and ship apps that scale from zero to millions instantly, utilizing features like durable orchestration, sandboxed environments, an AI model gateway, and fluid compute. Prominent companies like Notion, Zapier, and Mintlify use Vercel for their web traffic, agent conversations, and documentation hosting. Candidates interested in joining can explore various open roles listed on their careers page across locations such as Austin, New York City, San Francisco, London, and Berlin.",
+          "what_they_do": "Vercel delivers innovative solutions in its target industry, prioritizing engineering excellence and customer impact.",
+          "sources": [
+            "https://vercel.com",
+            "https://vercel.com/careers",
+            "https://vercel.com/careers/design-engineer-us-6129441004"
+          ]
+        },
+        "role": {
+          "title": "Senior Fullstack Engineer",
+          "seniority": "Senior",
+          "responsibilities": [
+            "Deliver high-impact features and technical capabilities for the Senior Fullstack Engineer track.",
+            "Collaborate with product, engineering, and cross-functional teams to solve technical challenges.",
+            "Ensure scalability, reliability, and code quality across deliverables."
+          ],
+          "requirements": [
+            {
+              "id": "r1",
+              "text": "Next.js proficiency",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r2",
+              "text": "React Server Components proficiency",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r3",
+              "text": "TypeScript proficiency",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r4",
+              "text": "Distributed systems knowledge",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r5",
+              "text": "4+ years of TypeScript experience",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r6",
+              "text": "4+ years of React experience",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r7",
+              "text": "Understanding of edge runtime and serverless architectures",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r8",
+              "text": "Experience building high-throughput developer tools",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r9",
+              "text": "Team collaboration skills",
+              "kind": "technical",
+              "priority": "must"
+            },
+            {
+              "id": "r10",
+              "text": "Rust experience",
+              "kind": "technical",
+              "priority": "nice"
+            },
+            {
+              "id": "r11",
+              "text": "Go experience",
+              "kind": "technical",
+              "priority": "nice"
+            }
+          ]
+        },
+        "questions": [
+          {
+            "id": "q1",
+            "requirement_ids": [
+              "r1",
+              "r2",
+              "r3",
+              "r6"
+            ],
+            "category": "technical",
+            "prompt": "How do you architect data flow and component boundaries when leveraging React Server Components in a Next.js application, and what are the trade-offs regarding client-side bundle size?",
+            "answer_outline": "1. Explain the boundary between Server Components and Client Components ('use client' directive). 2. Discuss how RSC prevents heavy libraries from leaking into the client bundle. 3. Detail serialization limits (passing only JSON-serializable props across boundaries). 4. Highlight trade-offs like managing state and context, which require client-side wrappers.",
+            "difficulty": 1
+          },
+          {
+            "id": "q2",
+            "requirement_ids": [
+              "r4",
+              "r7",
+              "r8"
+            ],
+            "category": "system-design",
+            "prompt": "Can you walk through how you would design a high-throughput developer tool endpoint running on a serverless and edge runtime architecture to handle sudden traffic bursts?",
+            "answer_outline": "1. Discuss edge computing benefits (low latency, proximity to users) and constraints (execution time limits, memory limits, lack of full Node.js APIs). 2. Detail stateless request handling and offloading heavy compute or persistence to durable storage/queues. 3. Address cold starts and how to mitigate them. 4. Discuss handling high-throughput scenarios safely using rate limiting, idempotent operations, and distributed caching.",
+            "difficulty": 2
+          },
+          {
+            "id": "q3",
+            "requirement_ids": [
+              "r5",
+              "r6",
+              "r9"
+            ],
+            "category": "behavioural",
+            "prompt": "Tell me about a time you had to coordinate a complex cross-functional feature delivery with tight deadlines. How did you align the team and handle technical blockers?",
+            "answer_outline": "1. Use the STAR method (Situation, Task, Action, Result). 2. Emphasize proactive communication channels and transparent status tracking. 3. Explain how technical blockers were surfaced early and broken down into smaller milestones. 4. Highlight collaboration with product managers, designers, and fellow engineers to reach a consensus.",
+            "difficulty": 3
+          },
+          {
+            "id": "q4",
+            "requirement_ids": [
+              "r4",
+              "r7",
+              "r8"
+            ],
+            "category": "company-fit",
+            "prompt": "Vercel powers infrastructure ranging from agent conversations to web traffic for high-scale customers like Notion and Zapier. How would you approach designing a scalable caching strategy for a high-throughput API gateway serving dynamic developer tool payloads?",
+            "answer_outline": "1. Acknowledge Vercel's mission of instant scaling and serving massive web traffic for top-tier clients. 2. Propose a multi-layered caching architecture utilizing edge caching, stale-while-revalidate (SWR) patterns, and distributed backend caches (e.g., Redis). 3. Discuss cache invalidation challenges in distributed systems. 4. Address how to ensure data consistency without sacrificing throughput or introducing high latency.",
+            "difficulty": 1
+          },
+          {
+            "id": "q5",
+            "requirement_ids": [
+              "r3",
+              "r5",
+              "r8"
+            ],
+            "category": "technical",
+            "prompt": "How do advanced TypeScript features (such as conditional types, template literal types, and mapped types) help enforce type safety when building robust developer tools?",
+            "answer_outline": "1. Explain how strict typing improves developer ergonomics and prevents runtime errors in SDKs or tooling. 2. Provide a concrete example of using conditional or template literal types to parse dynamic configuration or API routes. 3. Discuss the balance between extreme type complexity and compile-time performance.",
+            "difficulty": 2
+          },
+          {
+            "id": "q6",
+            "requirement_ids": [
+              "r10"
+            ],
+            "category": "technical",
+            "prompt": "Can you describe your experience with Rust, particularly how you've handled memory management without a garbage collector and dealt with the borrow checker?",
+            "answer_outline": "Discuss ownership, borrowing, and lifetimes; explain how Rust prevents data races at compile time; share a concrete project or bug solved using the borrow checker; mention trade-offs like steeper learning curve and compilation times versus memory safety and performance.",
+            "difficulty": 3
+          },
+          {
+            "id": "q7",
+            "requirement_ids": [
+              "r11"
+            ],
+            "category": "technical",
+            "prompt": "What is your experience building concurrent and scalable backend services using Go, and how do you handle goroutines and channels in production?",
+            "answer_outline": "Highlight concurrency primitives (goroutines and channels); discuss patterns for avoiding goroutine leaks and race conditions (using sync.WaitGroup, context cancellation, and the race detector); mention ecosystem familiarity (standard library, HTTP routing, gRPC).",
+            "difficulty": 1
+          }
+        ],
+        "flashcards": [
+          {
+            "id": "f1",
+            "front": "How do React Server Components (RSC) impact client-side bundle size in a Next.js application?",
+            "back": "RSCs execute entirely on the server, meaning their dependencies and code are never sent to the client bundle, reducing JavaScript footprint and improving initial load performance.",
+            "requirement_ids": [
+              "r2"
+            ]
+          },
+          {
+            "id": "f2",
+            "front": "What architectural patterns help handle sudden traffic bursts on serverless and edge runtime endpoints?",
+            "back": "Utilize edge caching, idempotent request designs, rate limiting, and asynchronous queuing to decouple incoming spikes from backend processing.",
+            "requirement_ids": [
+              "r7"
+            ]
+          },
+          {
+            "id": "f3",
+            "front": "How do advanced TypeScript features like conditional and mapped types improve developer tool safety?",
+            "back": "They enable precise type transformations and constraints, catching invalid configurations or API payloads at compile time rather than runtime.",
+            "requirement_ids": [
+              "r3"
+            ]
+          },
+          {
+            "id": "f4",
+            "front": "How is memory management handled in Rust without a garbage collector?",
+            "back": "Rust uses an ownership model with a set of rules checked at compile time by the borrow checker, ensuring memory safety without runtime GC overhead.",
+            "requirement_ids": [
+              "r10"
+            ]
+          },
+          {
+            "id": "f5",
+            "front": "How do you manage concurrency safely in production Go backend services?",
+            "back": "By using goroutines for lightweight execution, channels for safe communication and synchronization between them, and properly handling context cancellation.",
+            "requirement_ids": [
+              "r11"
+            ]
+          }
+        ],
+        "schedule": {
+          "days_available": 5,
+          "days": [
+            {
+              "day": 1,
+              "focus": "Foundations, Architecture & Core Skills",
+              "question_ids": [
+                "q1",
+                "q2"
+              ],
+              "minutes": 50
+            },
+            {
+              "day": 2,
+              "focus": "Day 2 Targeted Practice & Spaced Repetition",
+              "question_ids": [
+                "q3",
+                "q4"
+              ],
+              "minutes": 50
+            },
+            {
+              "day": 3,
+              "focus": "Deep Dive Scenarios, System Design & Edge Cases",
+              "question_ids": [
+                "q5",
+                "q6"
+              ],
+              "minutes": 50
+            },
+            {
+              "day": 4,
+              "focus": "Day 4 Targeted Practice & Spaced Repetition",
+              "question_ids": [
+                "q7"
+              ],
+              "minutes": 35
+            },
+            {
+              "day": 5,
+              "focus": "Mock Interview Simulation, Behavioral & Final Revision",
+              "question_ids": [
+                "q5"
+              ],
+              "minutes": 35
+            }
+          ]
+        },
+        "coverage": {
+          "uncovered_requirement_ids": [],
+          "passes": 2
+        }
+      },
+      "error": null
+    }
+  ]
+}

@@ -113,8 +113,11 @@ export interface Schedule {
 }
 
 export interface Coverage {
-  uncovered_requirement_ids: string[];
-  passes: number;
+  uncovered_requirement_ids?: string[];
+  total_requirements?: number;
+  covered_requirements?: number;
+  coverage_rate?: number;
+  passes?: number;
 }
 
 export interface KitContent {
@@ -134,10 +137,17 @@ export interface KitContent {
   interviewTips?: string[];
 }
 
+export interface KitProgress {
+  practiced_question_ids: string[];
+  completed_checklist_keys: string[];
+  last_studied_at?: string;
+}
+
 export interface FullKit extends KitSummary {
   linkedinPage?: string;
   notes?: string;
   kit: Partial<KitContent>;
+  progress?: KitProgress;
   errorMessage?: string;
 }
 
@@ -163,6 +173,42 @@ export const api = {
 
     getById: (id: string) =>
       apiFetch<{ kit: FullKit }>(`/api/kits/${id}`),
+
+    updateProgress: (
+      id: string,
+      progress: {
+        practiced_question_ids: string[];
+        completed_checklist_keys: string[];
+      }
+    ) =>
+      apiFetch<{ success: boolean; progress: KitProgress }>(
+        `/api/kits/${id}/progress`,
+        {
+          method: "PATCH",
+          body: JSON.stringify(progress),
+        }
+      ),
+
+    regenerateSection: (
+      id: string,
+      section: "questions" | "flashcards" | "schedule"
+    ) =>
+      apiFetch<{ success: boolean; kit: FullKit["kit"] }>(
+        `/api/kits/${id}/regenerate-section`,
+        {
+          method: "POST",
+          body: JSON.stringify({ section }),
+        }
+      ),
+
+    updateQuestions: (id: string, questions: Question[]) =>
+      apiFetch<{ success: boolean; questions: Question[] }>(
+        `/api/kits/${id}/questions`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ questions }),
+        }
+      ),
 
     delete: (id: string) =>
       apiFetch<{ success: boolean }>(`/api/kits/${id}`, { method: "DELETE" }),

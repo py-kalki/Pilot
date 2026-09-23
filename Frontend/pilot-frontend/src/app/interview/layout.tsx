@@ -166,7 +166,7 @@ export default function InterviewLayout({ children }: { children: React.ReactNod
       <main style={{
         flex: 1,
         height: "100vh",
-        overflowY: "auto",
+        overflow: "hidden",
         display: "flex",
         flexDirection: "column",
       }}>

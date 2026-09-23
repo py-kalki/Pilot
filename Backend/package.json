@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "batch": "ts-node src/cli/batch.ts",
+    "evaluate": "ts-node scripts/evaluate.ts",
     "build": "tsc",
     "start": "node dist/server.js"
   },
