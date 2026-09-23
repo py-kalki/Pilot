@@ -23,6 +23,7 @@
     <a href="#-appendix-a-data-contract">Appendix A Spec</a> •
     <a href="#-interactive-practice-suite">Practice Suite</a> •
     <a href="#-getting-started">Getting Started</a> •
+    <a href="DEPLOYMENT.md">Deployment Guide</a> •
     <a href="#-batch-evaluation-cli">Evaluation CLI</a> •
     <a href="#-api-reference">API Reference</a> •
     <a href="#-design-system">Design System</a>
