@@ -16,13 +16,26 @@ This guide provides step-by-step instructions to deploy the **Pilot** platform (
 
 ---
 
+> [!CAUTION]
+> **⚠️ CRITICAL: MongoDB Atlas IP Whitelist — Do this FIRST or deployment WILL fail.**
+>
+> Cloud platforms like Render use **dynamic IPs** that change on every deploy. You must allow all IPs in Atlas:
+> 1. Go to [MongoDB Atlas](https://cloud.mongodb.com) → your cluster → **Network Access** (left sidebar)
+> 2. Click **"+ ADD IP ADDRESS"** → **"ALLOW ACCESS FROM ANYWHERE"** → fills in `0.0.0.0/0`
+> 3. Click **Confirm** and wait ~1 minute
+>
+> Without this step, you will see: `MongooseServerSelectionError: Could not connect to any servers in your MongoDB Atlas cluster`
+
+---
+
 ## 📋 Prerequisites & Service Setup
 
 Before deploying, collect your API keys and credentials:
 
 1. **MongoDB Atlas**:
    - Create a free cluster at [cloud.mongodb.com](https://cloud.mongodb.com).
-   - Create a database user and whitelist `0.0.0.0/0` (or your backend server IPs).
+   - **Whitelist `0.0.0.0/0`** — required for cloud-hosted backends (Render, Railway, Fly.io all use dynamic IPs). See the caution box above.
+   - Create a database user with read/write access.
    - Get the connection string: `mongodb+srv://<user>:<password>@cluster0.xxx.mongodb.net/pilot?retryWrites=true&w=majority`
 
 2. **Google Gemini API**:
