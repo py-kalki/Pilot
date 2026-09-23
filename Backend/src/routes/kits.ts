@@ -225,6 +225,7 @@ router.post("/:id/regenerate-section", requireAuth, async (req: Request, res: Re
         return {
           text: q.prompt,
           category: cat,
+          difficulty: (q.difficulty as 1 | 2 | 3) || 2,
           requirementIds: q.requirement_ids,
           answerOutline: q.answer_outline,
         };
