@@ -54,98 +54,270 @@ function getStepIndex(status: string): number {
   return idx === -1 ? 0 : idx;
 }
 
+const MASTERCLASS_TIPS = [
+  "💡 STAR Framework: For behavioral questions, clearly quantify the Situation, Task, Actions, and Results.",
+  "⚡ System Design: Always establish traffic scale, storage requirements, and latency SLAs before designing.",
+  "🎯 Technical Trade-offs: Contrast brute force with optimal time/space complexity to demonstrate senior depth.",
+  "🏛️ Architecture: Discuss caching strategies, idempotency keys, and database partitioning when scaling.",
+  "✨ Culture Alignment: Emphasize end-to-end ownership, automated testing, and collaborative cross-team impact.",
+];
+
 function LiveStatusView({ kit }: { kit: FullKit }) {
   const currentIdx = getStepIndex(kit.status);
   const isError = kit.status === "error";
 
+  // Tip rotation
+  const [tipIndex, setTipIndex] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTipIndex((prev) => (prev + 1) % MASTERCLASS_TIPS.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Compute smooth progress percentage
+  const progressPercent = useMemo(() => {
+    switch (kit.status) {
+      case "crawling":   return 28;
+      case "analyzing":  return 60;
+      case "generating": return 88;
+      case "done":       return 100;
+      default:           return 15;
+    }
+  }, [kit.status]);
+
   return (
     <div style={{
       flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
-      padding: "3rem 2rem",
+      padding: "2.5rem 1.5rem", minHeight: "80vh",
     }}>
       <div style={{
-        width: "100%", maxWidth: "540px",
+        width: "100%", maxWidth: "600px",
         backgroundColor: "#FFFFFF",
         border: "1px solid #E2DDD6",
-        borderRadius: "20px",
-        padding: "2.25rem 2.5rem",
-        boxShadow: "0 8px 24px -4px rgba(38,34,30,0.06)",
+        borderRadius: "24px",
+        padding: "2.5rem 2.5rem 2.25rem",
+        boxShadow: "0 14px 40px -6px rgba(38,34,30,0.08), 0 4px 12px -2px rgba(38,34,30,0.03)",
+        position: "relative",
+        overflow: "hidden",
       }}>
+        {/* Subtle decorative top accent bar */}
+        <div style={{
+          position: "absolute", top: 0, left: 0, right: 0, height: "4px",
+          background: "linear-gradient(90deg, var(--color-teal-deep) 0%, var(--color-mint) 50%, var(--color-teal-deep) 100%)",
+        }} />
+
         {isError ? (
           <>
-            <div style={{ width: "48px", height: "48px", borderRadius: "50%", backgroundColor: "#FDEAEA", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.25rem" }}>
-              <AlertCircle size={24} color="#8B2020" />
+            <div style={{ width: "52px", height: "52px", borderRadius: "50%", backgroundColor: "#FDEAEA", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.25rem" }}>
+              <AlertCircle size={28} color="#8B2020" />
             </div>
-            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.5rem", fontWeight: 400, color: "var(--color-ink)", margin: "0 0 0.5rem" }}>
-              Something went wrong.
+            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 400, color: "var(--color-ink)", margin: "0 0 0.5rem" }}>
+              Synthesis Interrupted
             </h2>
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.88rem", color: "var(--color-text-muted)", margin: "0 0 1.5rem", lineHeight: 1.5 }}>
-              {kit.errorMessage || "The kit generation encountered an error. Please try again."}
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.88rem", color: "var(--color-text-muted)", margin: "0 0 1.5rem", lineHeight: 1.55 }}>
+              {kit.errorMessage || "The kit generation encountered an issue. Please check the job description and retry."}
             </p>
-            <Link href="/interview/new" className="btn-primary" style={{ textDecoration: "none", padding: "0.7rem 1.5rem", fontSize: "0.88rem" }}>
+            <Link href="/interview/new" className="btn-primary" style={{ textDecoration: "none", padding: "0.75rem 1.6rem", fontSize: "0.88rem" }}>
               Try again
             </Link>
           </>
         ) : (
           <>
-            {/* Header */}
-            <div style={{ marginBottom: "2rem" }}>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-teal-deep)", margin: "0 0 0.4rem" }}>
-                Generating Prep Kit
-              </p>
-              <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.5rem", fontWeight: 400, color: "var(--color-ink)", margin: "0 0 0.3rem" }}>
-                {kit.name}
+            {/* Dynamic Orbital Radar Pulse Hero */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: "2rem" }}>
+              <div style={{
+                position: "relative",
+                width: "90px",
+                height: "90px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: "1.25rem",
+              }}>
+                {/* Concentric Pulse Waves */}
+                <div style={{
+                  position: "absolute",
+                  inset: "-12px",
+                  borderRadius: "50%",
+                  border: "1.5px solid rgba(37, 101, 113, 0.25)",
+                  animation: "radarWave 2.8s ease-out infinite",
+                }} />
+                <div style={{
+                  position: "absolute",
+                  inset: "-4px",
+                  borderRadius: "50%",
+                  border: "1.5px solid rgba(37, 101, 113, 0.4)",
+                  animation: "radarWave 2.8s ease-out 0.9s infinite",
+                }} />
+
+                {/* Central Core Glowing Orb */}
+                <div style={{
+                  width: "64px",
+                  height: "64px",
+                  borderRadius: "50%",
+                  backgroundColor: "var(--color-teal-deep)",
+                  boxShadow: "0 0 24px rgba(37, 101, 113, 0.35)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#FFFFFF",
+                  zIndex: 2,
+                  animation: "coreGlow 2.2s ease-in-out infinite alternate",
+                }}>
+                  <Sparkles size={28} />
+                </div>
+              </div>
+
+              <span style={{
+                fontFamily: "var(--font-sans)", fontSize: "0.72rem", fontWeight: 700,
+                letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--color-teal-deep)",
+                backgroundColor: "rgba(37, 101, 113, 0.08)", padding: "0.25rem 0.75rem", borderRadius: "999px",
+                marginBottom: "0.6rem",
+              }}>
+                AI Intelligence Pipeline Active
+              </span>
+
+              <h2 style={{
+                fontFamily: "var(--font-serif)", fontSize: "1.65rem", fontWeight: 400,
+                color: "var(--color-ink)", margin: "0 0 0.4rem", lineHeight: 1.25,
+              }}>
+                {kit.name || "Custom Prep Kit"}
               </h2>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: "var(--color-text-muted)", margin: 0 }}>
-                {kit.statusMessage}
+
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: "var(--color-text-muted)", margin: 0, maxWidth: "420px" }}>
+                {kit.statusMessage || "Assembling comprehensive interview questions, strategy rubrics & study schedule..."}
               </p>
             </div>
 
-            {/* Steps */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            {/* ── Smooth Progress Bar with Percentage Counter ──── */}
+            <div style={{ marginBottom: "1.75rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "0.45rem" }}>
+                <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.74rem", fontWeight: 600, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  Generation Progress
+                </span>
+                <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.86rem", fontWeight: 700, color: "var(--color-teal-deep)" }}>
+                  {progressPercent}%
+                </span>
+              </div>
+
+              <div style={{
+                width: "100%", height: "8px", backgroundColor: "#EAE6DE", borderRadius: "999px", overflow: "hidden", position: "relative",
+              }}>
+                <div style={{
+                  height: "100%",
+                  width: `${progressPercent}%`,
+                  backgroundColor: "var(--color-teal-deep)",
+                  borderRadius: "999px",
+                  transition: "width 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+                  position: "relative",
+                  overflow: "hidden",
+                }}>
+                  <div style={{
+                    position: "absolute", inset: 0,
+                    background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)",
+                    animation: "shimmerBar 1.8s infinite",
+                  }} />
+                </div>
+              </div>
+            </div>
+
+            {/* ── Multi-stage Progression Timeline ─────────────── */}
+            <div style={{
+              display: "flex", flexDirection: "column", gap: "0.85rem",
+              backgroundColor: "var(--color-cream-alt)", borderRadius: "16px",
+              padding: "1.25rem", border: "1px solid #E8E4DD",
+              marginBottom: "1.5rem",
+            }}>
               {PIPELINE_STEPS.map((step, idx) => {
                 const isDone = idx < currentIdx;
                 const isActive = idx === currentIdx;
 
                 return (
-                  <div key={step.status} style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
+                  <div key={step.status} style={{ display: "flex", alignItems: "flex-start", gap: "0.85rem" }}>
                     <div style={{
-                      width: "28px", height: "28px", borderRadius: "50%", flexShrink: 0,
+                      width: "26px", height: "26px", borderRadius: "50%", flexShrink: 0,
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      backgroundColor: isDone ? "var(--color-teal-deep)" : isActive ? "transparent" : "#F0EDE8",
+                      backgroundColor: isDone ? "var(--color-teal-deep)" : isActive ? "#FFFFFF" : "#E2DDD6",
                       border: isActive ? "2px solid var(--color-teal-deep)" : "none",
+                      boxShadow: isActive ? "0 0 10px rgba(37, 101, 113, 0.25)" : "none",
                       transition: "all 0.3s ease",
+                      marginTop: "2px",
                     }}>
                       {isDone ? (
-                        <Check size={14} color="#FFFFFF" strokeWidth={3} />
+                        <Check size={13} color="#FFFFFF" strokeWidth={3} />
                       ) : isActive ? (
-                        <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "var(--color-teal-deep)", animation: "pulseDot 1.2s ease-in-out infinite" }} />
+                        <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "var(--color-teal-deep)", animation: "pulseDot 1s ease-in-out infinite" }} />
                       ) : (
-                        <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#D4CFC9" }} />
+                        <div style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#A8A29A" }} />
                       )}
                     </div>
 
-                    <div style={{ minWidth: 0 }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
                       <p style={{
-                        fontFamily: "var(--font-sans)", fontSize: "0.88rem", fontWeight: isActive ? 600 : 400,
-                        color: isDone ? "var(--color-teal-deep)" : isActive ? "var(--color-ink)" : "var(--color-text-muted)",
-                        margin: 0, lineHeight: 1.2,
+                        fontFamily: "var(--font-sans)", fontSize: "0.86rem", fontWeight: isActive ? 600 : 500,
+                        color: isDone ? "var(--color-teal-deep)" : isActive ? "var(--color-ink)" : "#8C867D",
+                        margin: 0, lineHeight: 1.25,
                       }}>
                         {step.label}
                       </p>
-                      {isActive && (
-                        <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--color-text-muted)", margin: "0.15rem 0 0" }}>
-                          {step.detail}
-                        </p>
-                      )}
+                      <p style={{
+                        fontFamily: "var(--font-sans)", fontSize: "0.74rem",
+                        color: isActive ? "var(--color-text-muted)" : "#A09A91",
+                        margin: "0.2rem 0 0", lineHeight: 1.4,
+                      }}>
+                        {step.detail}
+                      </p>
                     </div>
                   </div>
                 );
               })}
             </div>
+
+            {/* ── Rotating Masterclass Interview Tips Ticker ──── */}
+            <div style={{
+              backgroundColor: "rgba(37, 101, 113, 0.05)",
+              border: "1px dashed rgba(37, 101, 113, 0.3)",
+              borderRadius: "12px",
+              padding: "0.75rem 1rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.65rem",
+              minHeight: "52px",
+            }}>
+              <p style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.79rem",
+                color: "var(--color-teal-deep)",
+                margin: 0,
+                lineHeight: 1.45,
+                fontWeight: 500,
+                transition: "opacity 0.3s ease",
+              }}>
+                {MASTERCLASS_TIPS[tipIndex]}
+              </p>
+            </div>
           </>
         )}
-        <style>{`@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:0.35}}`}</style>
+
+        <style>{`
+          @keyframes radarWave {
+            0% { transform: scale(0.85); opacity: 0.9; }
+            100% { transform: scale(1.4); opacity: 0; }
+          }
+          @keyframes coreGlow {
+            0% { transform: scale(1); filter: brightness(1); }
+            100% { transform: scale(1.04); filter: brightness(1.15); }
+          }
+          @keyframes pulseDot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.5; }
+          }
+          @keyframes shimmerBar {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+          }
+        `}</style>
       </div>
     </div>
   );
@@ -172,6 +344,144 @@ const CATEGORY_MAP: Record<string, string> = {
   "role-specific": "Role Specific",
   "company-specific": "Company Specific",
 };
+
+/* ── Formatted Masterclass Answer Outline Renderer ─────────── */
+function renderInlineMarkdown(text: string) {
+  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return (
+        <strong key={i} style={{ fontWeight: 700, color: "var(--color-ink)" }}>
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return (
+        <code
+          key={i}
+          style={{
+            backgroundColor: "#EAE6DF",
+            padding: "0.15rem 0.4rem",
+            borderRadius: "4px",
+            fontFamily: "monospace",
+            fontSize: "0.85em",
+            color: "#256571",
+          }}
+        >
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    return part;
+  });
+}
+
+function MasterclassAnswerRenderer({ text }: { text: string }) {
+  if (!text) return null;
+  const lines = text.split("\n");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+        if (!trimmed) {
+          return <div key={idx} style={{ height: "4px" }} />;
+        }
+
+        const sectionMatch = trimmed.match(/^(\d+\.|\#{1,3})\s+(.*)$/);
+        if (sectionMatch) {
+          return (
+            <div
+              key={idx}
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "0.6rem",
+                marginTop: idx > 0 ? "0.6rem" : 0,
+                paddingBottom: "0.25rem",
+                borderBottom: "1px solid #ECE7DE",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.72rem",
+                  fontWeight: 700,
+                  backgroundColor: "var(--color-teal-deep)",
+                  color: "#FFFFFF",
+                  padding: "0.15rem 0.5rem",
+                  borderRadius: "6px",
+                  flexShrink: 0,
+                  marginTop: "2px",
+                }}
+              >
+                {sectionMatch[1].replace(".", "")}
+              </span>
+              <h5
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.95rem",
+                  fontWeight: 700,
+                  color: "var(--color-ink)",
+                  margin: 0,
+                  lineHeight: 1.4,
+                }}
+              >
+                {renderInlineMarkdown(sectionMatch[2])}
+              </h5>
+            </div>
+          );
+        }
+
+        if (trimmed.startsWith("•") || trimmed.startsWith("-") || trimmed.startsWith("*")) {
+          const content = trimmed.replace(/^[•\-*]\s*/, "");
+          return (
+            <div
+              key={idx}
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "0.65rem",
+                paddingLeft: "0.5rem",
+                lineHeight: 1.6,
+                fontSize: "0.9rem",
+                color: "var(--color-ink)",
+              }}
+            >
+              <span
+                style={{
+                  width: "6px",
+                  height: "6px",
+                  borderRadius: "50%",
+                  backgroundColor: "var(--color-teal-deep)",
+                  flexShrink: 0,
+                  marginTop: "0.55rem",
+                }}
+              />
+              <span style={{ flex: 1 }}>{renderInlineMarkdown(content)}</span>
+            </div>
+          );
+        }
+
+        return (
+          <p
+            key={idx}
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.9rem",
+              color: "var(--color-ink)",
+              margin: 0,
+              lineHeight: 1.6,
+            }}
+          >
+            {renderInlineMarkdown(trimmed)}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
 
 /* ── Interactive One-at-a-Time Interview Simulator ─────────── */
 function InteractiveQuestionsView({
@@ -544,12 +854,7 @@ function InteractiveQuestionsView({
               <BookOpen size={14} color="var(--color-teal-deep)" />
               Answer Strategy & Technical Outline
             </h4>
-            <div style={{
-              fontFamily: "var(--font-sans)", fontSize: "0.92rem", color: "var(--color-ink)",
-              lineHeight: 1.7, whiteSpace: "pre-wrap",
-            }}>
-              {answerText}
-            </div>
+            <MasterclassAnswerRenderer text={answerText} />
           </div>
         )}
 

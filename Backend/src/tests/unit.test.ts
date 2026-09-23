@@ -139,8 +139,8 @@ async function runTests() {
     ];
 
     const questionsPass1: GeneratedQuestion[] = [
-      { text: "React state management", category: "technical", requirementIds: ["R1"] },
-      { text: "Node.js event loop", category: "technical", requirementIds: ["R2"] },
+      { text: "React state management", category: "technical", difficulty: 2, requirementIds: ["R1"] },
+      { text: "Node.js event loop", category: "technical", difficulty: 2, requirementIds: ["R2"] },
     ];
 
     const rep1 = checkCoverage(reqs, questionsPass1, 1);
@@ -151,8 +151,8 @@ async function runTests() {
     // Close gaps in Pass 2
     const questionsPass2: GeneratedQuestion[] = [
       ...questionsPass1,
-      { text: "Docker containerization", category: "technical", requirementIds: ["R3"] },
-      { text: "Distributed microservices", category: "system_design", requirementIds: ["R4"] },
+      { text: "Docker containerization", category: "technical", difficulty: 2, requirementIds: ["R3"] },
+      { text: "Distributed microservices", category: "system_design", difficulty: 3, requirementIds: ["R4"] },
     ];
 
     const rep2 = checkCoverage(reqs, questionsPass2, 2);

@@ -41,7 +41,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email.trim(), password);
-      router.push("/onboarding");
+      router.push("/interview");
     } catch (err: any) {
       setError(getFirebaseAuthErrorMessage(err));
     } finally {
@@ -54,7 +54,7 @@ export default function LoginPage() {
     setGoogleLoading(true);
     try {
       await signInWithPopup(auth, googleProvider);
-      router.push("/onboarding");
+      router.push("/interview");
     } catch (err: any) {
       setError(getFirebaseAuthErrorMessage(err));
     } finally {

@@ -7,7 +7,8 @@ export const GeneratedQuestionSchema = z.object({
   text: z.string().describe("The interview question prompt"),
   category: z.enum(["technical", "behavioural", "system_design", "company_fit"]).describe("Question category"),
   requirementIds: z.array(z.string()).describe("List of requirement IDs this question tests"),
-  answerOutline: z.string().optional().describe("Detailed answer strategy, technical talking points, and trade-offs tailored to this question"),
+  answerOutline: z.string().optional().describe("Comprehensive masterclass answer blueprint with markdown sections"),
+  difficulty: z.number().int().min(1).max(3).optional().default(2).describe("Question difficulty 1-3"),
 });
 
 export const QuestionListSchema = z.array(GeneratedQuestionSchema);

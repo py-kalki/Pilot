@@ -18,14 +18,19 @@ export interface CrawlResult {
 /** Common career page URL path patterns */
 const CAREER_PATHS = [
   "/careers",
+  "/career",
   "/jobs",
+  "/job",
+  "/hiring",
   "/work-with-us",
   "/join-us",
-  "/hiring",
+  "/join",
   "/about/careers",
   "/company/careers",
   "/opportunities",
   "/openings",
+  "/careers/",
+  "/jobs/",
 ];
 
 /** ATS domains that often host job descriptions */
@@ -52,57 +57,129 @@ function normalizeUrl(url: string): string {
   }
 }
 
-async function scrapeUrl(url: string): Promise<string> {
-  if (!url) return "";
-  try {
-    const result = await firecrawl.scrapeUrl(url, {
-      formats: ["markdown"],
-    });
-    if (result && result.success && result.markdown) {
-      // Truncate to keep context concise and relevant
-      return result.markdown.slice(0, 8000);
-    }
-    return "";
-  } catch (err) {
-    console.warn(`[firecrawl] Scrape failed for ${url}:`, err);
-    return "";
-  }
-}
-
 interface ExtractedLink {
   text: string;
   url: string;
 }
 
-/** Extracts markdown and HTML links from scraped content */
-function extractLinks(markdown: string, baseUrl: string): ExtractedLink[] {
+/** Converts raw HTML to clean text and extracts links */
+function htmlToMarkdown(html: string, baseUrl: string): { text: string; links: ExtractedLink[] } {
+  const cleaned = html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "")
+    .replace(/<svg\b[^<]*(?:(?!<\/svg>)<[^<]*)*<\/svg>/gi, "")
+    .replace(/<noscript\b[^<]*(?:(?!<\/noscript>)<[^<]*)*<\/noscript>/gi, "");
+
   const links: ExtractedLink[] = [];
   const seen = new Set<string>();
+  const linkRegex = /<a\s+(?:[^>]*?\s+)?href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi;
+  let m: RegExpExecArray | null;
 
-  // Markdown links: [text](url)
-  const mdRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]+)\)/g;
-  let match: RegExpExecArray | null;
-
-  while ((match = mdRegex.exec(markdown)) !== null) {
-    const text = match[1].trim();
-    let url = match[2].trim();
-
-    // Resolve relative URL
-    if (url.startsWith("/")) {
+  while ((m = linkRegex.exec(cleaned)) !== null) {
+    let href = m[1].trim();
+    const rawText = m[2].replace(/<[^>]+>/g, " ").trim();
+    if (href.startsWith("/")) {
       try {
-        url = new URL(url, baseUrl).toString();
+        href = new URL(href, baseUrl).toString();
       } catch {
         continue;
       }
     }
-
-    if (!seen.has(url)) {
-      seen.add(url);
-      links.push({ text, url });
+    if (href.startsWith("http") && !seen.has(href)) {
+      seen.add(href);
+      links.push({ text: rawText, url: href });
     }
   }
 
-  return links;
+  const text = cleaned
+    .replace(/<h[1-6][^>]*>(.*?)<\/h[1-6]>/gi, "\n\n# $1\n")
+    .replace(/<p[^>]*>(.*?)<\/p>/gi, "\n\n$1\n")
+    .replace(/<li[^>]*>(.*?)<\/li>/gi, "\n- $1")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  return { text: text.slice(0, 10000), links };
+}
+
+/**
+ * Scrapes a URL using Firecrawl with automatic fallback to native HTTP fetch + HTML extraction.
+ */
+async function scrapeUrl(url: string): Promise<{ text: string; links: ExtractedLink[] }> {
+  if (!url) return { text: "", links: [] };
+
+  // 1. Try Firecrawl
+  try {
+    const result: any = await firecrawl.scrapeUrl(url, {
+      formats: ["markdown", "links"],
+    });
+    if (result && result.success && result.markdown && result.markdown.length > 50) {
+      const links: ExtractedLink[] = [];
+      const seen = new Set<string>();
+
+      // Extract markdown links from Firecrawl markdown
+      const mdRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]+)\)/g;
+      let match: RegExpExecArray | null;
+      while ((match = mdRegex.exec(result.markdown)) !== null) {
+        const text = match[1].trim();
+        let linkUrl = match[2].trim();
+        if (linkUrl.startsWith("/")) {
+          try {
+            linkUrl = new URL(linkUrl, url).toString();
+          } catch {
+            continue;
+          }
+        }
+        if (!seen.has(linkUrl)) {
+          seen.add(linkUrl);
+          links.push({ text, url: linkUrl });
+        }
+      }
+
+      // Add direct links from Firecrawl response if present
+      if (Array.isArray(result.links)) {
+        for (const l of result.links) {
+          if (typeof l === "string" && l.startsWith("http") && !seen.has(l)) {
+            seen.add(l);
+            links.push({ text: "", url: l });
+          }
+        }
+      }
+
+      return { text: result.markdown.slice(0, 8000), links };
+    }
+  } catch (err) {
+    console.warn(`[scrapeUrl] Firecrawl failed for ${url} (rate-limit or error), falling back to native fetch:`, err);
+  }
+
+  // 2. Fallback: Native HTTP fetch
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      },
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (res.ok) {
+      const html = await res.text();
+      return htmlToMarkdown(html, url);
+    }
+  } catch (fetchErr) {
+    console.warn(`[scrapeUrl] Native fetch failed for ${url}:`, fetchErr);
+  }
+
+  return { text: "", links: [] };
 }
 
 /** Finds the best hiring/career page URL from links or fallback paths */
@@ -122,10 +199,26 @@ function findCareerUrl(links: ExtractedLink[], baseUrl: string): string | null {
     "opportunities",
   ];
 
+  const excludedPaths = [
+    "/how-it-works",
+    "/pricing",
+    "/features",
+    "/privacy",
+    "/terms",
+    "/cookie",
+    "/blog",
+    "/login",
+    "/sign-up",
+  ];
+
   // 1. Check extracted links for career-specific keywords in text or url
   for (const link of links) {
     const textLower = link.text.toLowerCase();
     const urlLower = link.url.toLowerCase();
+
+    if (excludedPaths.some((p) => urlLower.includes(p))) {
+      continue;
+    }
 
     for (const kw of careerKeywords) {
       if (textLower.includes(kw) || urlLower.includes(kw)) {
@@ -211,12 +304,13 @@ export async function crawlCompany(
   onProgress?.("🌐 Scraping company overview...");
 
   // ── Step 1: Scrape Company Home / Main Page ─────────────────
-  let companyOverview = await scrapeUrl(targetUrl);
-  if (!companyOverview && originUrl !== targetUrl) {
-    companyOverview = await scrapeUrl(originUrl);
+  let homeResult = await scrapeUrl(targetUrl);
+  if (!homeResult.text && originUrl !== targetUrl) {
+    homeResult = await scrapeUrl(originUrl);
   }
 
-  const homepageLinks = companyOverview ? extractLinks(companyOverview, originUrl) : [];
+  const companyOverview = homeResult.text;
+  const homepageLinks = homeResult.links;
 
   // ── Step 2: Find and Scrape Hiring / Careers Page ───────────
   let careersPage = "";
@@ -226,8 +320,9 @@ export async function crawlCompany(
   if (careersUrl) {
     console.log(`[crawl] Step 2: Found careers page link -> ${careersUrl}`);
     onProgress?.(`💼 Scraping careers page at ${careersUrl}...`);
-    careersPage = await scrapeUrl(careersUrl);
-    if (careersPage && careersPage.length > 150) {
+    const scraped = await scrapeUrl(careersUrl);
+    if (scraped.text && scraped.text.length > 100) {
+      careersPage = scraped.text;
       careersFound = true;
     }
   }
@@ -237,12 +332,12 @@ export async function crawlCompany(
     for (const path of CAREER_PATHS) {
       const tryUrl = `${originUrl}${path}`;
       console.log(`[crawl] Testing career path: ${tryUrl}`);
-      const content = await scrapeUrl(tryUrl);
-      if (content && content.length > 200) {
-        careersPage = content;
+      const scraped = await scrapeUrl(tryUrl);
+      if (scraped.text && scraped.text.length > 100) {
+        careersPage = scraped.text;
         careersUrl = tryUrl;
         careersFound = true;
-        console.log(`[crawl] Careers page found at fallback: ${tryUrl}`);
+        console.log(`[crawl] Careers page found at: ${tryUrl} (${scraped.text.length} chars)`);
         break;
       }
     }
@@ -253,8 +348,7 @@ export async function crawlCompany(
   let jobUrl: string | null = null;
   let jobRoleFound = false;
 
-  // Extract all links from the careers page
-  const careersLinks = careersPage ? extractLinks(careersPage, careersUrl || originUrl) : [];
+  const careersLinks = careersPage ? (await scrapeUrl(careersUrl || originUrl)).links : [];
   const allCandidateLinks = [...careersLinks, ...homepageLinks];
 
   jobUrl = findMatchingJobUrl(allCandidateLinks, jobRole);
@@ -263,8 +357,8 @@ export async function crawlCompany(
     console.log(`[crawl] Step 3: Found matching job role opening -> ${jobUrl}`);
     onProgress?.(`🎯 Crawling specific job description for "${jobRole}"...`);
     const jobContent = await scrapeUrl(jobUrl);
-    if (jobContent && jobContent.length > 150) {
-      jobListing = jobContent;
+    if (jobContent.text && jobContent.text.length > 100) {
+      jobListing = jobContent.text;
       jobRoleFound = true;
     }
   }
@@ -290,13 +384,13 @@ export async function crawlCompany(
       console.log(`[crawl] Step 4: Crawling provided LinkedIn / Job URL: ${linkedinPage}`);
       onProgress?.("🔗 Crawling LinkedIn job posting...");
       const linkedinContent = await scrapeUrl(linkedinPage);
-      if (linkedinContent && linkedinContent.length > 100) {
+      if (linkedinContent.text && linkedinContent.text.length > 100) {
         if (!jobListing) {
-          jobListing = linkedinContent;
+          jobListing = linkedinContent.text;
           jobRoleFound = true;
           jobUrl = linkedinPage;
         } else {
-          jobListing += `\n\n--- LinkedIn Job Posting Details ---\n` + linkedinContent.slice(0, 3000);
+          jobListing += `\n\n--- LinkedIn Job Posting Details ---\n` + linkedinContent.text.slice(0, 3000);
         }
       }
     } catch {
@@ -304,10 +398,11 @@ export async function crawlCompany(
     }
   }
 
+  // Build clean, verified pagesUsed list (strictly actual crawled pages, no random marketing sublinks)
   const pagesUsedSet = new Set<string>();
   if (companyOverview) pagesUsedSet.add(targetUrl);
-  if (careersPage && careersUrl) pagesUsedSet.add(careersUrl);
-  if (jobListing && jobUrl) pagesUsedSet.add(jobUrl);
+  if (careersFound && careersUrl) pagesUsedSet.add(careersUrl);
+  if (jobRoleFound && jobUrl) pagesUsedSet.add(jobUrl);
   if (linkedinPage) pagesUsedSet.add(linkedinPage);
 
   const pagesUsed = Array.from(pagesUsedSet);

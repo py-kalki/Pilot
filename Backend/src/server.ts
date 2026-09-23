@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import kitsRouter from "./routes/kits";
+import profileRouter from "./routes/profile";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -17,7 +18,7 @@ app.use(
 );
 
 /* ── Body parsing ──────────────────────────────────────────── */
-app.use(express.json({ limit: "2mb" }));
+app.use(express.json({ limit: "10mb" }));
 
 /* ── Health check ──────────────────────────────────────────── */
 app.get("/health", (_req, res) => {
@@ -26,6 +27,7 @@ app.get("/health", (_req, res) => {
 
 /* ── Routes ────────────────────────────────────────────────── */
 app.use("/api/kits", kitsRouter);
+app.use("/api/profile", profileRouter);
 
 /* ── MongoDB connection + server start ─────────────────────── */
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/pilot";

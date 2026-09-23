@@ -4,48 +4,40 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { api, UserProfile } from "@/lib/api";
+import {
+  FileText,
+  UploadCloud,
+  CheckCircle2,
+  Sparkles,
+  AlertCircle,
+  Briefcase,
+  Code2,
+  GraduationCap,
+  Globe,
+  Phone,
+  ChevronRight,
+  ChevronLeft,
+  Calendar,
+  Check,
+} from "lucide-react";
 
 /* ── Step definitions ──────────────────────────────────────── */
-const TOTAL_STEPS = 3;
+const TOTAL_STEPS = 4;
 
 /* ── Inline SVG icons ──────────────────────────────────────── */
-const ChevronRight = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="9 18 15 12 9 6" />
-  </svg>
-);
-
-const ChevronLeft = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="15 18 9 12 15 6" />
-  </svg>
-);
-
-const CalendarIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-    <line x1="16" y1="2" x2="16" y2="6" />
-    <line x1="8" y1="2" x2="8" y2="6" />
-    <line x1="3" y1="10" x2="21" y2="10" />
-  </svg>
-);
-
 const Spinner = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ animation: "spin 0.7s linear infinite" }}>
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    style={{ animation: "spin 0.7s linear infinite" }}
+  >
     <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-  </svg>
-);
-
-const SparkleIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z" />
-  </svg>
-);
-
-const CheckIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="20 6 9 17 4 12" />
   </svg>
 );
 
@@ -58,13 +50,13 @@ const JOB_SUGGESTIONS = [
   "Frontend Engineer",
   "Engineering Manager",
   "DevOps / SRE",
-  "Business Analyst",
+  "Fullstack Developer",
 ];
 
 /* ── Custom Theme DatePicker Component ──────────────────────── */
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+  "July", "August", "September", "October", "November", "December",
 ];
 const DAY_NAMES = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
@@ -80,7 +72,6 @@ function CustomDatePicker({
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Parse current value or default to ~2000
   const parsedDate = value ? new Date(value + "T00:00:00") : null;
   const initialYear = parsedDate ? parsedDate.getFullYear() : 2000;
   const initialMonth = parsedDate ? parsedDate.getMonth() : 0;
@@ -88,7 +79,6 @@ function CustomDatePicker({
   const [viewYear, setViewYear] = useState(initialYear);
   const [viewMonth, setViewMonth] = useState(initialMonth);
 
-  // Close calendar on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -103,7 +93,6 @@ function CustomDatePicker({
     };
   }, [isOpen]);
 
-  // Sync view when value changes
   useEffect(() => {
     if (value) {
       const d = new Date(value + "T00:00:00");
@@ -117,7 +106,6 @@ function CustomDatePicker({
   const currentYear = new Date().getFullYear();
   const yearOptions = Array.from({ length: 90 }, (_, i) => currentYear - 13 - i);
 
-  // Days calculation
   const firstDayIndex = new Date(viewYear, viewMonth, 1).getDay();
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
   const daysInPrevMonth = new Date(viewYear, viewMonth, 0).getDate();
@@ -146,21 +134,14 @@ function CustomDatePicker({
     setIsOpen(false);
   }
 
-  const formattedDisplay = parsedDate && !isNaN(parsedDate.getTime())
-    ? parsedDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
-    : "";
+  const formattedDisplay =
+    parsedDate && !isNaN(parsedDate.getTime())
+      ? parsedDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
+      : "";
 
   return (
     <div ref={containerRef} style={{ position: "relative", width: "100%" }}>
-      {/* Input row */}
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          width: "100%",
-        }}
-      >
+      <div style={{ position: "relative", display: "flex", alignItems: "center", width: "100%" }}>
         <input
           id="ob-dob"
           type="text"
@@ -177,7 +158,6 @@ function CustomDatePicker({
             userSelect: "none",
           }}
         />
-        {/* Calendar trigger button at the end */}
         <button
           type="button"
           aria-label="Toggle calendar"
@@ -203,18 +183,11 @@ function CustomDatePicker({
             borderRadius: "8px",
             transition: "all 0.2s ease",
           }}
-          onMouseEnter={(e) => {
-            if (!isOpen) e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.05)";
-          }}
-          onMouseLeave={(e) => {
-            if (!isOpen) e.currentTarget.style.backgroundColor = "transparent";
-          }}
         >
-          <CalendarIcon />
+          <Calendar size={18} />
         </button>
       </div>
 
-      {/* Calendar popover popup — pops UPWARD to prevent page scroll overflow */}
       {isOpen && (
         <div
           style={{
@@ -228,10 +201,8 @@ function CustomDatePicker({
             borderRadius: "14px",
             boxShadow: "0 14px 36px -4px rgba(38,34,30,0.16), 0 4px 12px -2px rgba(38,34,30,0.08)",
             padding: "1.1rem",
-            animation: "popupFadeUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) both",
           }}
         >
-          {/* Header controls: Month, Year, Arrows */}
           <div
             style={{
               display: "flex",
@@ -242,7 +213,6 @@ function CustomDatePicker({
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-              {/* Month select */}
               <select
                 value={viewMonth}
                 onChange={(e) => setViewMonth(Number(e.target.value))}
@@ -266,7 +236,6 @@ function CustomDatePicker({
                 ))}
               </select>
 
-              {/* Year select */}
               <select
                 value={viewYear}
                 onChange={(e) => setViewYear(Number(e.target.value))}
@@ -291,7 +260,6 @@ function CustomDatePicker({
               </select>
             </div>
 
-            {/* Prev / Next buttons */}
             <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
               <button
                 type="button"
@@ -306,10 +274,9 @@ function CustomDatePicker({
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: "pointer",
-                  color: "var(--color-ink)",
                 }}
               >
-                <ChevronLeft />
+                <ChevronLeft size={16} />
               </button>
               <button
                 type="button"
@@ -324,15 +291,13 @@ function CustomDatePicker({
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: "pointer",
-                  color: "var(--color-ink)",
                 }}
               >
-                <ChevronRight />
+                <ChevronRight size={16} />
               </button>
             </div>
           </div>
 
-          {/* Weekday labels */}
           <div
             style={{
               display: "grid",
@@ -349,7 +314,6 @@ function CustomDatePicker({
                   fontSize: "0.72rem",
                   fontWeight: 600,
                   color: "var(--color-text-muted)",
-                  letterSpacing: "0.04em",
                   padding: "0.25rem 0",
                 }}
               >
@@ -358,7 +322,6 @@ function CustomDatePicker({
             ))}
           </div>
 
-          {/* Days grid */}
           <div
             style={{
               display: "grid",
@@ -366,7 +329,6 @@ function CustomDatePicker({
               gap: "2px",
             }}
           >
-            {/* Prev month fill days */}
             {Array.from({ length: firstDayIndex }).map((_, i) => {
               const dayNum = daysInPrevMonth - firstDayIndex + i + 1;
               return (
@@ -379,7 +341,6 @@ function CustomDatePicker({
                     justifyContent: "center",
                     fontSize: "0.8rem",
                     color: "#D0CCC6",
-                    fontFamily: "var(--font-sans)",
                   }}
                 >
                   {dayNum}
@@ -387,7 +348,6 @@ function CustomDatePicker({
               );
             })}
 
-            {/* Current month days */}
             {Array.from({ length: daysInMonth }).map((_, i) => {
               const day = i + 1;
               const isSelected =
@@ -414,13 +374,6 @@ function CustomDatePicker({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    transition: "all 0.15s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isSelected) e.currentTarget.style.backgroundColor = "rgba(37,101,113,0.08)";
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isSelected) e.currentTarget.style.backgroundColor = "transparent";
                   }}
                 >
                   {day}
@@ -428,65 +381,8 @@ function CustomDatePicker({
               );
             })}
           </div>
-
-          {/* Bottom actions */}
-          <div
-            style={{
-              marginTop: "1rem",
-              paddingTop: "0.75rem",
-              borderTop: "1px solid #EFECE6",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => {
-                onChange("");
-                setIsOpen(false);
-              }}
-              style={{
-                background: "none",
-                border: "none",
-                color: "var(--color-text-muted)",
-                fontSize: "0.78rem",
-                cursor: "pointer",
-                fontFamily: "var(--font-sans)",
-              }}
-            >
-              Clear
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                const now = new Date();
-                const formatted = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-                onChange(formatted);
-                setIsOpen(false);
-              }}
-              style={{
-                background: "none",
-                border: "none",
-                color: "var(--color-teal-deep)",
-                fontWeight: 600,
-                fontSize: "0.78rem",
-                cursor: "pointer",
-                fontFamily: "var(--font-sans)",
-              }}
-            >
-              Today
-            </button>
-          </div>
         </div>
       )}
-
-      <style>{`
-        @keyframes popupFadeUp {
-          from { opacity: 0; transform: translateY(6px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }
@@ -502,10 +398,80 @@ export default function OnboardingPage() {
   const [jobRole, setJobRole] = useState("");
   const [location, setLocation] = useState("");
 
+  // Step 3 — Resume ATS Upload & Extraction
+  const [resumeMode, setResumeMode] = useState<"upload" | "paste">("upload");
+  const [resumeFileName, setResumeFileName] = useState("");
+  const [resumeFileSize, setResumeFileSize] = useState<number>(0);
+  const [resumeText, setResumeText] = useState("");
+  const [isParsingResume, setIsParsingResume] = useState(false);
+  const [parsedProfile, setParsedProfile] = useState<UserProfile | null>(null);
+  const [parseError, setParseError] = useState("");
+
   // Navigation
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  /* ── File Upload Handler ────────────────────────────────── */
+  const handleFileUpload = async (file: File) => {
+    setParseError("");
+    setResumeFileName(file.name);
+    setResumeFileSize(file.size);
+    setIsParsingResume(true);
+
+    try {
+      // Send the raw binary file as FormData — backend extracts text
+      // with pdf-parse (PDF) or mammoth (DOCX), avoiding browser binary garbage
+      const res = await api.profile.uploadResumeFile(file, {
+        targetRole: jobRole,
+        location: location,
+        dob: dob,
+      });
+
+      if (res && res.profile) {
+        setParsedProfile(res.profile);
+        if (res.profile.name && !name) setName(res.profile.name);
+        // Show a readable preview of what was extracted
+        setResumeText(res.profile.resume?.rawText || file.name);
+      }
+    } catch (err: unknown) {
+      console.warn("ATS Parser warning:", err);
+      setParseError("Could not fully parse document. You can also paste your resume text below.");
+    } finally {
+      setIsParsingResume(false);
+    }
+  };
+
+  const handlePastedResumeParse = async () => {
+    if (!resumeText.trim() || resumeText.length < 20) {
+      setParseError("Please paste at least a few sentences from your resume or LinkedIn profile.");
+      return;
+    }
+    setIsParsingResume(true);
+    setParseError("");
+    try {
+      const res = await api.profile.uploadResume({
+        resumeText,
+        fileName: "Pasted_Resume.txt",
+        fileSize: resumeText.length,
+        fileType: "text/plain",
+        targetRole: jobRole,
+        location: location,
+        dob: dob,
+      });
+
+      if (res && res.profile) {
+        setParsedProfile(res.profile);
+        if (res.profile.name && !name) setName(res.profile.name);
+      }
+    } catch (err: unknown) {
+      console.error("Paste parse error:", err);
+      setParseError("Failed to parse resume text. Please check your content and retry.");
+    } finally {
+      setIsParsingResume(false);
+    }
+  };
 
   /* ── Validation ─────────────────────────────────────────── */
   function validate(): boolean {
@@ -522,6 +488,11 @@ export default function OnboardingPage() {
     if (step === 2) {
       if (!jobRole.trim()) next.jobRole = "Please enter your target job role.";
       if (!location.trim()) next.location = "Please enter your preferred location.";
+    }
+    if (step === 3) {
+      if (!resumeFileName && !resumeText.trim() && !parsedProfile) {
+        next.resume = "Please upload or paste your resume to extract your ATS profile.";
+      }
     }
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -543,10 +514,17 @@ export default function OnboardingPage() {
   async function handleFinish() {
     setLoading(true);
     try {
-      // simulate saving user onboarding state
-      await new Promise((r) => setTimeout(r, 1000));
+      // If parsedProfile exists or basic info is filled, save final profile
+      await api.profile.update({
+        name,
+        targetRole: jobRole,
+        location,
+        dob,
+      });
       router.push("/interview");
     } catch {
+      router.push("/interview");
+    } finally {
       setLoading(false);
     }
   }
@@ -564,7 +542,7 @@ export default function OnboardingPage() {
         padding: "1.5rem 1.5rem 2rem",
       }}
     >
-      {/* ── Top Header — Centered Pilot Logo ─────────────────── */}
+      {/* ── Top Header ───────────────────────────────────────── */}
       <header
         style={{
           width: "100%",
@@ -591,7 +569,7 @@ export default function OnboardingPage() {
       <main
         style={{
           width: "100%",
-          maxWidth: "520px",
+          maxWidth: "580px",
           display: "flex",
           flexDirection: "column",
           gap: "1.5rem",
@@ -668,8 +646,9 @@ export default function OnboardingPage() {
               }}
             >
               {step === 1 && "Nice to meet you."}
-              {step === 2 && "What's the target role?"}
-              {step === 3 && "You're all set."}
+              {step === 2 && "What's your target role?"}
+              {step === 3 && "Upload your Resume / CV."}
+              {step === 4 && "Review your candidate dossier."}
             </h1>
             <p
               style={{
@@ -680,16 +659,16 @@ export default function OnboardingPage() {
                 lineHeight: 1.5,
               }}
             >
-              {step === 1 && "Let's start with a few quick details to personalize your interview prep."}
+              {step === 1 && "Let's start with basic details to personalize your candidate profile."}
               {step === 2 && "Tell us your target position — we'll tailor mock questions & rubrics to it."}
-              {step === 3 && "Review your details and launch your first AI interview practice session."}
+              {step === 3 && "Our ATS intelligence engine will extract your experience, projects, phone, socials, and skills."}
+              {step === 4 && "Review all extracted details and launch your first AI interview practice session."}
             </p>
           </div>
 
           {/* ── STEP 1: Personal Info ────────────────────────── */}
           {step === 1 && (
             <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-              {/* Full Name */}
               <div>
                 <label htmlFor="ob-name" className="field-label">
                   Full name
@@ -710,7 +689,6 @@ export default function OnboardingPage() {
                 {errors.name && <p className="field-error">{errors.name}</p>}
               </div>
 
-              {/* Date of Birth — Custom Themed Calendar */}
               <div>
                 <label className="field-label">Date of birth</label>
                 <CustomDatePicker
@@ -739,7 +717,7 @@ export default function OnboardingPage() {
                   borderRadius: "999px",
                 }}
               >
-                Continue <ChevronRight />
+                Continue <ChevronRight size={16} />
               </button>
             </div>
           )}
@@ -747,7 +725,6 @@ export default function OnboardingPage() {
           {/* ── STEP 2: Role & Location ──────────────────────── */}
           {step === 2 && (
             <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-              {/* Target Job Role */}
               <div>
                 <label htmlFor="ob-role" className="field-label">
                   Target job role
@@ -767,7 +744,6 @@ export default function OnboardingPage() {
                 />
                 {errors.jobRole && <p className="field-error">{errors.jobRole}</p>}
 
-                {/* Suggestions */}
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem", marginTop: "0.6rem" }}>
                   {JOB_SUGGESTIONS.map((s) => (
                     <button
@@ -787,7 +763,6 @@ export default function OnboardingPage() {
                         fontSize: "0.76rem",
                         fontWeight: 500,
                         cursor: "pointer",
-                        transition: "all 0.15s ease",
                       }}
                     >
                       {s}
@@ -796,7 +771,6 @@ export default function OnboardingPage() {
                 </div>
               </div>
 
-              {/* Preferred Location */}
               <div>
                 <label htmlFor="ob-location" className="field-label">
                   Preferred location
@@ -831,7 +805,7 @@ export default function OnboardingPage() {
                     borderRadius: "999px",
                   }}
                 >
-                  <ChevronLeft /> Back
+                  <ChevronLeft size={16} /> Back
                 </button>
                 <button
                   type="button"
@@ -847,16 +821,282 @@ export default function OnboardingPage() {
                     borderRadius: "999px",
                   }}
                 >
-                  Continue <ChevronRight />
+                  Continue <ChevronRight size={16} />
                 </button>
               </div>
             </div>
           )}
 
-          {/* ── STEP 3: Review & Confirmation ────────────────── */}
+          {/* ── STEP 3: Resume ATS Intelligence & Upload ─────── */}
           {step === 3 && (
             <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-              {/* Summary table */}
+              {/* Toggle mode: Upload vs Paste */}
+              <div
+                style={{
+                  display: "flex",
+                  padding: "3px",
+                  backgroundColor: "var(--color-cream-alt)",
+                  borderRadius: "999px",
+                  border: "1px solid #E2DDD6",
+                  gap: "4px",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setResumeMode("upload")}
+                  style={{
+                    flex: 1,
+                    padding: "0.45rem 1rem",
+                    borderRadius: "999px",
+                    border: "none",
+                    backgroundColor: resumeMode === "upload" ? "#FFFFFF" : "transparent",
+                    color: resumeMode === "upload" ? "var(--color-ink)" : "var(--color-text-muted)",
+                    fontWeight: 600,
+                    fontSize: "0.8rem",
+                    cursor: "pointer",
+                    boxShadow: resumeMode === "upload" ? "0 2px 6px rgba(0,0,0,0.05)" : "none",
+                  }}
+                >
+                  Upload File (PDF / TXT / DOC)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setResumeMode("paste")}
+                  style={{
+                    flex: 1,
+                    padding: "0.45rem 1rem",
+                    borderRadius: "999px",
+                    border: "none",
+                    backgroundColor: resumeMode === "paste" ? "#FFFFFF" : "transparent",
+                    color: resumeMode === "paste" ? "var(--color-ink)" : "var(--color-text-muted)",
+                    fontWeight: 600,
+                    fontSize: "0.8rem",
+                    cursor: "pointer",
+                    boxShadow: resumeMode === "paste" ? "0 2px 6px rgba(0,0,0,0.05)" : "none",
+                  }}
+                >
+                  Paste Text / LinkedIn
+                </button>
+              </div>
+
+              {resumeMode === "upload" ? (
+                /* Drag-and-Drop Area */
+                <div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".pdf,.txt,.doc,.docx,.md"
+                    style={{ display: "none" }}
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        handleFileUpload(e.target.files[0]);
+                      }
+                    }}
+                  />
+
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                        handleFileUpload(e.dataTransfer.files[0]);
+                      }
+                    }}
+                    style={{
+                      border: "2px dashed #D5D0C7",
+                      borderRadius: "14px",
+                      padding: "2rem 1.5rem",
+                      textAlign: "center",
+                      backgroundColor: "var(--color-cream-alt)",
+                      cursor: "pointer",
+                      transition: "border-color 0.2s ease, background-color 0.2s ease",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "48px",
+                        height: "48px",
+                        borderRadius: "50%",
+                        backgroundColor: "rgba(37, 101, 113, 0.1)",
+                        color: "var(--color-teal-deep)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        margin: "0 auto 0.75rem",
+                      }}
+                    >
+                      <UploadCloud size={24} />
+                    </div>
+                    <p style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--color-ink)", margin: "0 0 0.25rem" }}>
+                      {resumeFileName ? resumeFileName : "Click or drag your resume here"}
+                    </p>
+                    <p style={{ fontSize: "0.78rem", color: "var(--color-text-muted)", margin: 0 }}>
+                      Supports PDF, TXT, DOCX, Markdown (Up to 15MB)
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                /* Paste Resume Area */
+                <div>
+                  <textarea
+                    rows={6}
+                    className="input-field"
+                    placeholder="Paste your resume text, bio, past companies, and LinkedIn details here..."
+                    value={resumeText}
+                    onChange={(e) => setResumeText(e.target.value)}
+                    style={{ resize: "vertical", fontSize: "0.85rem", lineHeight: 1.5 }}
+                  />
+                  <button
+                    type="button"
+                    onClick={handlePastedResumeParse}
+                    disabled={isParsingResume || !resumeText.trim()}
+                    className="btn-secondary"
+                    style={{
+                      marginTop: "0.6rem",
+                      fontSize: "0.8rem",
+                      padding: "0.45rem 1rem",
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "0.4rem",
+                    }}
+                  >
+                    {isParsingResume ? <Spinner /> : <Sparkles size={14} />}
+                    {isParsingResume ? "Extracting ATS Data..." : "Analyze & Extract ATS Profile"}
+                  </button>
+                </div>
+              )}
+
+              {/* Parsing Progress / Live ATS Feedback (Non-blocking background banner) */}
+              {isParsingResume && (
+                <div
+                  style={{
+                    backgroundColor: "rgba(37, 101, 113, 0.08)",
+                    border: "1px solid rgba(37, 101, 113, 0.2)",
+                    borderRadius: "12px",
+                    padding: "0.9rem 1.1rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.75rem",
+                  }}
+                >
+                  <Spinner />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                      <p style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--color-teal-deep)", margin: 0 }}>
+                        ATS Background Parser Active
+                      </p>
+                      <span style={{ fontSize: "0.7rem", backgroundColor: "rgba(37, 101, 113, 0.15)", color: "var(--color-teal-deep)", padding: "0.15rem 0.5rem", borderRadius: "999px", fontWeight: 600 }}>
+                        Non-blocking
+                      </span>
+                    </div>
+                    <p style={{ fontSize: "0.75rem", color: "var(--color-text-muted)", margin: "0.15rem 0 0" }}>
+                      Extracting work history, skills, phone, and projects in background. You can advance immediately — details will appear in your account!
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Parsed Extraction Success Pill */}
+              {parsedProfile && !isParsingResume && (
+                <div
+                  style={{
+                    backgroundColor: "rgba(35, 62, 43, 0.06)",
+                    border: "1px solid rgba(35, 62, 43, 0.2)",
+                    borderRadius: "12px",
+                    padding: "1rem",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <CheckCircle2 size={16} color="var(--color-forest)" />
+                    <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--color-forest)" }}>
+                      ATS Information Successfully Extracted
+                    </span>
+                  </div>
+
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", fontSize: "0.75rem" }}>
+                    {parsedProfile.phone && (
+                      <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
+                        📞 {parsedProfile.phone}
+                      </span>
+                    )}
+                    {parsedProfile.socialLinks?.linkedin && (
+                      <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
+                        🔗 LinkedIn Linked
+                      </span>
+                    )}
+                    {parsedProfile.skills?.length > 0 && (
+                      <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
+                        ⚡ {parsedProfile.skills.length} Skills Cataloged
+                      </span>
+                    )}
+                    {parsedProfile.experience?.length > 0 && (
+                      <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
+                        💼 {parsedProfile.experience.length} Positions Structured
+                      </span>
+                    )}
+                    {parsedProfile.projects?.length > 0 && (
+                      <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
+                        🚀 {parsedProfile.projects.length} Projects Analyzed
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {parseError && (
+                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#B04040", fontSize: "0.8rem" }}>
+                  <AlertCircle size={14} />
+                  <span>{parseError}</span>
+                </div>
+              )}
+
+              {errors.resume && <p className="field-error">{errors.resume}</p>}
+
+              <div style={{ display: "flex", gap: "0.75rem", marginTop: "0.5rem" }}>
+                <button
+                  type="button"
+                  onClick={goBack}
+                  className="btn-secondary"
+                  style={{
+                    padding: "0.85rem 1.25rem",
+                    fontSize: "0.9rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.4rem",
+                    borderRadius: "999px",
+                  }}
+                >
+                  <ChevronLeft size={16} /> Back
+                </button>
+                <button
+                  type="button"
+                  onClick={advance}
+                  className="btn-primary btn-full"
+                  style={{
+                    padding: "0.85rem 1.5rem",
+                    fontSize: "0.9rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "0.5rem",
+                    borderRadius: "999px",
+                  }}
+                >
+                  Review Dossier <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ── STEP 4: Review & Final Confirmation ──────────── */}
+          {step === 4 && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
               <div
                 style={{
                   backgroundColor: "var(--color-cream-alt)",
@@ -868,27 +1108,30 @@ export default function OnboardingPage() {
                   gap: "0.85rem",
                 }}
               >
-                <SummaryRow label="Name" value={name} />
+                <SummaryRow label="Candidate Name" value={name || parsedProfile?.name || "Candidate"} />
+                <div style={{ height: "1px", backgroundColor: "#E8E4DE" }} />
+                <SummaryRow label="Target Role" value={jobRole} highlight />
+                <div style={{ height: "1px", backgroundColor: "#E8E4DE" }} />
+                <SummaryRow label="Location" value={location || parsedProfile?.location || "Remote"} />
                 <div style={{ height: "1px", backgroundColor: "#E8E4DE" }} />
                 <SummaryRow
-                  label="Date of birth"
-                  value={
-                    dob
-                      ? new Date(dob + "T00:00:00").toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })
-                      : ""
-                  }
+                  label="Resume Attached"
+                  value={resumeFileName || (parsedProfile ? "Parsed Resume" : "Attached")}
                 />
-                <div style={{ height: "1px", backgroundColor: "#E8E4DE" }} />
-                <SummaryRow label="Target role" value={jobRole} highlight />
-                <div style={{ height: "1px", backgroundColor: "#E8E4DE" }} />
-                <SummaryRow label="Location" value={location} />
+                {parsedProfile?.phone && (
+                  <>
+                    <div style={{ height: "1px", backgroundColor: "#E8E4DE" }} />
+                    <SummaryRow label="Phone" value={parsedProfile.phone} />
+                  </>
+                )}
+                {parsedProfile?.skills && parsedProfile.skills.length > 0 && (
+                  <>
+                    <div style={{ height: "1px", backgroundColor: "#E8E4DE" }} />
+                    <SummaryRow label="Extracted Skills" value={`${parsedProfile.skills.length} Skills`} />
+                  </>
+                )}
               </div>
 
-              {/* Edit link */}
               <p
                 style={{
                   fontFamily: "var(--font-sans)",
@@ -898,7 +1141,7 @@ export default function OnboardingPage() {
                   lineHeight: 1.5,
                 }}
               >
-                Everything look right? You can adjust these preferences later.{" "}
+                All information will be accessible and editable on your <strong>/account</strong> page.{" "}
                 <button
                   type="button"
                   onClick={() => setStep(1)}
@@ -910,7 +1153,6 @@ export default function OnboardingPage() {
                     color: "var(--color-teal-deep)",
                     fontWeight: 500,
                     fontSize: "0.8rem",
-                    fontFamily: "var(--font-sans)",
                     textDecoration: "underline",
                   }}
                 >
@@ -932,7 +1174,7 @@ export default function OnboardingPage() {
                     borderRadius: "999px",
                   }}
                 >
-                  <ChevronLeft /> Back
+                  <ChevronLeft size={16} /> Back
                 </button>
                 <button
                   type="button"
@@ -955,7 +1197,7 @@ export default function OnboardingPage() {
                     </>
                   ) : (
                     <>
-                      <SparkleIcon /> Start preparation
+                      <Sparkles size={16} /> Launch Workspace
                     </>
                   )}
                 </button>

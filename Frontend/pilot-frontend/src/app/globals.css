@@ -56,6 +56,23 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── Custom Pointer Cursor ─────────────────────────────────── */
+button,
+a,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+select,
+summary,
+.cursor-pointer,
+label[for],
+[tabindex]:not([tabindex="-1"]) {
+  cursor: url("/macos-cursor.svg") 11 5, pointer !important;
+}
+
 /* Typography Utilities */
 .font-serif  { font-family: var(--font-serif); }
 .font-sans   { font-family: var(--font-sans); }

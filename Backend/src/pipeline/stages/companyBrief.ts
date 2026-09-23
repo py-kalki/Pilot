@@ -33,9 +33,14 @@ ${crawledContent.slice(0, 7000) || "No crawled text available."}
       temperature: 0.25,
     });
 
+    // Ensure only actual crawled source URLs from validSources are returned
+    const cleanedSources = (result.sources || []).filter((s) =>
+      validSources.some((vs) => s === vs || s.replace(/\/$/, "") === vs.replace(/\/$/, ""))
+    );
+
     return {
       summary: result.summary,
-      sources: result.sources.length > 0 ? result.sources : validSources,
+      sources: cleanedSources.length > 0 ? cleanedSources : validSources,
     };
   } catch (err) {
     console.warn("[companyBrief] Fallback summary due to error:", err);

@@ -31,6 +31,26 @@ async function apiFetch<T>(
   return res.json() as Promise<T>;
 }
 
+/** For multipart/form-data — do NOT set Content-Type header, let the browser set boundary */
+async function apiFetchMultipart<T>(
+  path: string,
+  formData: FormData
+): Promise<T> {
+  const token = await getToken();
+  const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {};
+
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers,
+    body: formData,
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: "Network error" }));
+    throw new Error(err.error || `HTTP ${res.status}`);
+  }
+  return res.json() as Promise<T>;
+}
+
 /* ── Kit API ───────────────────────────────────────────────── */
 
 export interface KitSummary {
@@ -151,6 +171,68 @@ export interface FullKit extends KitSummary {
   errorMessage?: string;
 }
 
+/* ── Candidate Profile & Resume ATS Types ──────────────────── */
+
+export interface SocialLinks {
+  linkedin?: string;
+  github?: string;
+  portfolio?: string;
+  twitter?: string;
+  other?: string;
+}
+
+export interface WorkExperience {
+  company: string;
+  role: string;
+  duration?: string;
+  location?: string;
+  description?: string;
+  highlights?: string[];
+}
+
+export interface Project {
+  name: string;
+  description: string;
+  techStack?: string[];
+  link?: string;
+}
+
+export interface Education {
+  institution: string;
+  degree: string;
+  year?: string;
+  gpa?: string;
+}
+
+export interface ResumeFile {
+  fileName: string;
+  fileSize?: number;
+  fileType?: string;
+  uploadedAt: string;
+  rawText?: string;
+}
+
+export interface UserProfile {
+  _id?: string;
+  userId: string;
+  email: string;
+  name: string;
+  phone?: string;
+  location?: string;
+  dob?: string;
+  targetRole?: string;
+  summary?: string;
+  skills: string[];
+  socialLinks: SocialLinks;
+  experience: WorkExperience[];
+  projects: Project[];
+  education: Education[];
+  certifications?: string[];
+  resume?: ResumeFile;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export const api = {
   kits: {
     create: (data: {
@@ -213,4 +295,52 @@ export const api = {
     delete: (id: string) =>
       apiFetch<{ success: boolean }>(`/api/kits/${id}`, { method: "DELETE" }),
   },
+
+  profile: {
+    get: () => apiFetch<{ profile: UserProfile }>("/api/profile"),
+
+    /**
+     * Upload a real File (PDF / DOCX / TXT / MD) as multipart FormData.
+     * The backend uses pdf-parse / mammoth to extract proper text before ATS parsing.
+     */
+    uploadResumeFile: (
+      file: File,
+      meta?: { targetRole?: string; location?: string; dob?: string }
+    ) => {
+      const fd = new FormData();
+      fd.append("resume", file);
+      if (meta?.targetRole) fd.append("targetRole", meta.targetRole);
+      if (meta?.location)   fd.append("location",   meta.location);
+      if (meta?.dob)        fd.append("dob",         meta.dob);
+      return apiFetchMultipart<{ success: boolean; profile: UserProfile; extracted: unknown }>(
+        "/api/profile/resume/file",
+        fd
+      );
+    },
+
+    /** Text / LinkedIn paste (no binary conversion needed) */
+    uploadResume: (data: {
+      resumeText: string;
+      fileName?: string;
+      fileSize?: number;
+      fileType?: string;
+      targetRole?: string;
+      location?: string;
+      dob?: string;
+    }) =>
+      apiFetch<{ success: boolean; profile: UserProfile; extracted: unknown }>(
+        "/api/profile/resume",
+        {
+          method: "POST",
+          body: JSON.stringify(data),
+        }
+      ),
+
+    update: (data: Partial<UserProfile>) =>
+      apiFetch<{ success: boolean; profile: UserProfile }>("/api/profile", {
+        method: "PUT",
+        body: JSON.stringify(data),
+      }),
+  },
 };
+

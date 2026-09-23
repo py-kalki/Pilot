@@ -27,6 +27,16 @@ const NAV_ITEMS = [
       </svg>
     ),
   },
+  {
+    href: "/account",
+    label: "Account",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+    ),
+  },
 ];
 
 export default function InterviewLayout({ children }: { children: React.ReactNode }) {
@@ -112,13 +122,25 @@ export default function InterviewLayout({ children }: { children: React.ReactNod
         </div>
 
         {/* User block at bottom */}
-        <div style={{
-          padding: "1rem 1.25rem",
-          borderTop: "1px solid #EDE9E2",
-          display: "flex",
-          alignItems: "center",
-          gap: "0.65rem",
-        }}>
+        <Link
+          href="/account"
+          style={{
+            padding: "1rem 1.25rem",
+            borderTop: "1px solid #EDE9E2",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.65rem",
+            textDecoration: "none",
+            backgroundColor: "transparent",
+            transition: "background-color 0.15s ease",
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLElement).style.backgroundColor = "#EFECE6";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+          }}
+        >
           <div style={{
             width: "32px", height: "32px", borderRadius: "50%",
             backgroundColor: "var(--color-teal-deep)",
@@ -134,7 +156,7 @@ export default function InterviewLayout({ children }: { children: React.ReactNod
               </span>
             )}
           </div>
-          <div style={{ minWidth: 0 }}>
+          <div style={{ minWidth: 0, flex: 1 }}>
             <p style={{
               fontFamily: "var(--font-sans)",
               fontSize: "0.82rem",
@@ -159,7 +181,7 @@ export default function InterviewLayout({ children }: { children: React.ReactNod
               {user.email}
             </p>
           </div>
-        </div>
+        </Link>
       </aside>
 
       {/* ══ MAIN CONTENT AREA ═════════════════════════════════ */}

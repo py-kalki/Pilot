@@ -8,15 +8,18 @@ const google = createGoogleGenerativeAI({
 });
 
 const ACTIVE_MODELS = [
+  "gemini-3.5-flash-lite",
+  "gemini-3.5-flash",
+  "gemini-flash-lite-latest",
   "gemini-3.1-flash-lite",
-  "gemini-3.1-pro-preview",
+  "gemini-3.7-flash",
   "gemini-3.6-flash",
 ];
 
 export interface GenerateStructuredOptions<T> {
   system: string;
   user: string;
-  schema: z.ZodType<T>;
+  schema: z.ZodType<T, any, any>;
   temperature?: number;
 }
 
@@ -65,7 +68,7 @@ export async function generateStructured<T>(
   // Fallback: If generateObject failed due to strict formatting, try text generation + JSON repair
   try {
     console.log("[generateStructured] Attempting raw text generation + JSON repair parse fallback...");
-    const model = google("gemini-3.1-flash-lite");
+    const model = google("gemini-3.5-flash");
     const rawRes = await generateText({
       model,
       system,
@@ -80,7 +83,7 @@ export async function generateStructured<T>(
   } catch (repairErr) {
     console.warn("[generateStructured] Direct JSON parse failed, triggering repair prompt...");
     try {
-      const repairModel = google("gemini-3.1-flash-lite");
+      const repairModel = google("gemini-3.5-flash");
       const repairRes = await generateObject({
         model: repairModel,
         system: JSON_REPAIR_SYSTEM_PROMPT,

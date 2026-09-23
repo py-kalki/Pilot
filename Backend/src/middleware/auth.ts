@@ -32,7 +32,7 @@ function initFirebase() {
   }
 }
 
-function decodeFirebaseJwt(token: string): { uid: string; email?: string } | null {
+function decodeFirebaseJwt(token: string): { uid: string; email?: string; name?: string } | null {
   try {
     const parts = token.split(".");
     if (parts.length !== 3) return null;
@@ -48,7 +48,7 @@ function decodeFirebaseJwt(token: string): { uid: string; email?: string } | nul
     const uid = payload.user_id || payload.sub;
     if (!uid) return null;
 
-    return { uid, email: payload.email };
+    return { uid, email: payload.email, name: payload.name };
   } catch (e) {
     console.error("[auth] Failed to parse JWT payload:", e);
     return null;
@@ -59,7 +59,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
-      user?: { uid: string; email?: string };
+      user?: { uid: string; email?: string; name?: string };
     }
   }
 }
@@ -87,7 +87,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
   if (hasValidCredentials) {
     try {
       const decoded = await admin.auth().verifyIdToken(token);
-      req.user = { uid: decoded.uid, email: decoded.email };
+      req.user = { uid: decoded.uid, email: decoded.email, name: decoded.name };
       next();
       return;
     } catch (err) {
