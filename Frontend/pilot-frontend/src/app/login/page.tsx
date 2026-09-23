@@ -81,7 +81,7 @@ export default function LoginPage() {
       >
         {/* Top bar */}
         <div style={{ padding: "1.25rem 2.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-          <Link href="https://usepilot.lat" style={{ display: "flex", alignItems: "center", gap: "0.5rem", textDecoration: "none" }}>
+          <Link href="https://usepilot.cfd" style={{ display: "flex", alignItems: "center", gap: "0.5rem", textDecoration: "none" }}>
             <Image
               src="/pilot-logo.png"
               alt="Pilot"

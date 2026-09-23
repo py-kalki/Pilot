@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Pilot — AI Interview Prep",
   description:
     "Pilot generates a personalized, editable, practice-ready interview prep kit from your job description in minutes.",
-  metadataBase: new URL("https://app.usepilot.lat"),
+  metadataBase: new URL("https://app.usepilot.cfd"),
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: "Pilot — AI Interview Prep",
     description:
       "Paste your JD, get a personalized prep kit. Research, questions, flashcards and a study schedule — all generated in one click.",
-    url: "https://app.usepilot.lat",
+    url: "https://app.usepilot.cfd",
     siteName: "Pilot",
   },
 };

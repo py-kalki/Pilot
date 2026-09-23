@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 /**
- * Root of app.usepilot.lat — redirects to /login.
+ * Root of app.usepilot.cfd — redirects to /login.
  * Once auth middleware is in place, authenticated users
  * will be redirected to /dashboard instead.
  */

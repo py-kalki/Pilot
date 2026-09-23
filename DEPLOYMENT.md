@@ -96,7 +96,7 @@ Before deploying, collect your API keys and credentials:
    | `NEXT_PUBLIC_FIREBASE_APP_ID` | `your_app_id` |
    | `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` | `your_measurement_id` |
 5. Click **Deploy**.
-6. Copy your live frontend domain (e.g., `https://pilot.vercel.app` or custom domain `https://usepilot.lat`).
+6. Copy your live frontend domain (e.g., `https://pilot.vercel.app` or custom domain `https://usepilot.cfd`).
 
 ---
 
@@ -106,7 +106,7 @@ Before deploying, collect your API keys and credentials:
 To allow Google Sign-In and email authentication from your live frontend:
 1. In [Firebase Console](https://console.firebase.google.com/) -> **Authentication** -> **Settings** -> **Authorized domains**.
 2. Click **Add domain**.
-3. Add your Vercel domain (e.g. `pilot.vercel.app`) and any custom domain (e.g. `usepilot.lat`).
+3. Add your Vercel domain (e.g. `pilot.vercel.app`) and any custom domain (e.g. `usepilot.cfd`).
 
 ### B. Configure CORS on Backend (if custom domain used)
 The Express backend automatically allows requests from localhost and production clients. If using a custom domain, ensure `Backend/src/server.ts` includes your custom domain origin in CORS options.
