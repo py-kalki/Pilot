@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+/* ── Pilot Design System ─────────────────────────────────────── */
+/* Following DESIGN.md strictly: cream bg, ink text, deep teal   */
+/* accents, serif display, sans UI, pill buttons, NO gradients.  */
+
+:root {
+  /* Brand Palette – from DESIGN.md §2 */
+  --color-cream:        #F5F2ED;
+  --color-cream-alt:    #FBFAF6;
+  --color-ink:          #26221E;
+  --color-ink-deep:     #201614;
+  --color-text-muted:   #474642;
+  --color-teal-deep:    #256571;
+  --color-teal-card:    #397478;
+  --color-mint:         #C3E1DF;
+  --color-mint-pale:    #BDD6D2;
+  --color-forest:       #233E2B;
+  --color-brown-dark:   #3A2C1F;
+  --color-gold:         #8A6D3B;
+  --color-btn-dark:     #454540;
+  --color-white:        #FFFFFF;
+
+  /* Fonts */
+  --font-serif:  "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-sans:   "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-moralana: "Moralana", "Playfair Display", serif;
+}
+
+@font-face {
+  font-family: 'Moralana';
+  src: url('/moralana/Moralana%20DEMO.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Utilities */
+.font-serif  { font-family: var(--font-serif); }
+.font-sans   { font-family: var(--font-sans); }
+
+/* ── Pilot Button System ───────────────────────────────────── */
+/* Primary: dark pill, cream text */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  border-radius: 999px;
+  background-color: var(--color-btn-dark);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border: 1.5px solid var(--color-btn-dark);
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-primary:hover {
+  background-color: var(--color-ink-deep);
+  border-color: var(--color-ink-deep);
+}
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Secondary: outline pill */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  border-radius: 999px;
+  background-color: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border: 1.5px solid var(--color-ink);
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-secondary:hover {
+  background-color: var(--color-ink);
+  color: var(--color-cream);
+}
+
+/* Full-width variant */
+.btn-full { width: 100%; }
+
+/* ── Form Inputs ──────────────────────────────────────────── */
+.input-field {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background-color: var(--color-cream-alt);
+  border: 1.5px solid #D8D4CE;
+  border-radius: 8px;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.input-field::placeholder {
+  color: #ABA9A4;
+}
+.input-field:focus {
+  border-color: var(--color-teal-deep);
+  box-shadow: 0 0 0 3px rgba(37, 101, 113, 0.12);
+}
+.input-field:invalid:not(:placeholder-shown) {
+  border-color: #B04040;
+}
+
+/* ── Auth Layout Helpers ──────────────────────────────────── */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-cream);
+}
+
+.auth-card {
+  background-color: var(--color-white);
+  border: 1px solid #E6E2DC;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: #E0DDD8;
+}
+
+/* Error message */
+.field-error {
+  font-size: 0.8rem;
+  color: #B04040;
+  margin-top: 0.375rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Form label */
+.field-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 0.4rem;
+}
+
+/* Password toggle wrapper */
+.input-wrapper {
+  position: relative;
+}
+.input-wrapper .input-field {
+  padding-right: 2.75rem;
+}
+.input-toggle {
+  position: absolute;
+  right: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 0.15s;
+}
+.input-toggle:hover { color: var(--color-ink); }
+
+/* Subtle link */
+.subtle-link {
+  color: var(--color-teal-deep);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.15s;
+}
+.subtle-link:hover { opacity: 0.7; }
