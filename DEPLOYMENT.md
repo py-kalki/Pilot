@@ -69,6 +69,7 @@ Before deploying, collect your API keys and credentials:
    |---|---|---|
    | `PORT` | `4000` | Or leave default |
    | `NODE_ENV` | `production` | Production mode |
+   | `FRONTEND_URL` | `https://app.usepilot.cfd` | Comma-separated list of allowed browser origins. See §3B. |
    | `MONGODB_URI` | `mongodb+srv://...` | From MongoDB Atlas |
    | `GEMINI_API_KEY` | `your_gemini_key` | From Google AI Studio |
    | `FIRECRAWL_API_KEY` | `your_firecrawl_key` | Optional |
@@ -109,7 +110,14 @@ To allow Google Sign-In and email authentication from your live frontend:
 3. Add your Vercel domain (e.g. `pilot.vercel.app`) and any custom domain (e.g. `usepilot.cfd`).
 
 ### B. Configure CORS on Backend (if custom domain used)
-The Express backend automatically allows requests from localhost and production clients. If using a custom domain, ensure `Backend/src/server.ts` includes your custom domain origin in CORS options.
+The Express backend (`Backend/src/server.ts`) builds its origin allowlist from `FRONTEND_URL` — a **comma-separated** list — plus the built-in defaults (`localhost:3000`, `localhost:3001`, `app.usepilot.cfd`, `usepilot.cfd`):
+
+```
+FRONTEND_URL=https://app.usepilot.cfd,https://pilot.vercel.app
+```
+
+> [!CAUTION]
+> A missing or stale `FRONTEND_URL` on the backend host is **silent and total**: the browser gets no `Access-Control-Allow-Origin`, so *every* API call — login redirect, interview list, kit generation, resume upload — fails with the generic `Failed to fetch`, even though the server itself is up and `/health` returns 200. Rejected origins are logged as `[cors] Blocked origin: <origin>`; check the Render logs first when the UI cannot reach the API.
 
 ---
 

@@ -7,12 +7,36 @@ import profileRouter from "./routes/profile";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
 
 /* ── CORS ──────────────────────────────────────────────────── */
+/**
+ * `FRONTEND_URL` may hold a comma-separated list. The production domains are
+ * kept in the defaults so a missing or stale env var can't take the whole API
+ * offline: a rejected origin leaves the browser with no
+ * `Access-Control-Allow-Origin`, and `fetch` reports it as "Failed to fetch".
+ */
+const ALLOWED_ORIGINS = [
+  ...(process.env.FRONTEND_URL ?? "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "https://app.usepilot.cfd",
+  "https://usepilot.cfd",
+];
+
 app.use(
   cors({
-    origin: [FRONTEND_URL, "http://localhost:3000", "http://localhost:3001"],
+    origin(origin, callback) {
+      // Non-browser callers (curl, health checks) send no Origin header.
+      if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      console.warn(`[cors] Blocked origin: ${origin}`);
+      callback(null, false);
+    },
     credentials: true,
   })
 );
