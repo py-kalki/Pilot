@@ -3,6 +3,8 @@ import { checkCoverage } from "../pipeline/stages/checkCoverage";
 import { ExtractedRequirement } from "../pipeline/stages/extractRequirements";
 import { GeneratedQuestion } from "../pipeline/stages/generateQuestions";
 import { IKitAppendixA, IScheduleDay } from "../models/Kit";
+import { Profile } from "../models/Profile";
+import { normalizeExtractedResume } from "../pipeline/stages/parseResume";
 import { z } from "zod";
 
 /* ── Appendix A Zod Validator for Strict Compliance ────────────────────── */
@@ -279,6 +281,111 @@ async function runTests() {
     for (const text of niceTexts) {
       assert(hasNiceSignal(text), `Correctly flags explicit bonus/nice: "${text}"`);
     }
+  }
+
+  // 5. ATS Extraction → Profile Persistence Contract
+  console.log("\n--- 5. Resume Normalization Meets Profile Schema ---");
+  {
+    /* Regression: a single incomplete entry used to make Profile.save() throw a
+       Mongoose ValidationError, surfacing as "Could not fully parse document"
+       on the onboarding resume step. */
+    const pessimisticLlmOutput = {
+      name: "Vedansh Danot",
+      email: "vedansh@example.com",
+      experience: [
+        { company: "Trao Technologies", role: "Software Engineer", duration: "2023 - Present" },
+        { role: "Freelance Developer", duration: "2022 - 2023" },
+      ],
+      projects: [{ name: "Pilot", tech_stack: ["Next.js", "MongoDB"] }],
+      education: [{ institution: "IIT Delhi" }],
+      skills: ["React", "Node.js"],
+    };
+
+    const normalized = normalizeExtractedResume(pessimisticLlmOutput);
+
+    assert(
+      normalized.experience.length === 1 &&
+        normalized.experience[0].company === "Trao Technologies" &&
+        normalized.experience[0].role === "Software Engineer",
+      "Drops experience rows the Profile schema cannot store (needs company and role)"
+    );
+    assert(normalized.projects.length === 0, "Drops projects missing a description");
+    assert(normalized.education.length === 0, "Drops education rows missing an institution or degree");
+
+    const buildProfile = (n: ReturnType<typeof normalizeExtractedResume>) =>
+      new Profile({
+        userId: "regression-user",
+        email: "vedansh@example.com",
+        name: n.name || "Candidate",
+        skills: n.skills,
+        socialLinks: n.socialLinks,
+        experience: n.experience,
+        projects: n.projects,
+        education: n.education,
+        certifications: n.certifications,
+        resume: {
+          fileName: "Vedansh_Danot_Resume.pdf",
+          fileSize: 1024,
+          fileType: "application/pdf",
+          uploadedAt: new Date(),
+        },
+      });
+
+    assert(
+      buildProfile(normalized).validateSync() === undefined,
+      "Normalized ATS output always satisfies the Profile schema (no save-time 500)"
+    );
+
+    /* Mongoose throws a CastError when a String path receives an array/object,
+       so every shape Gemini realistically returns must be flattened to text. */
+    const hostileShapes: Array<[string, any]> = [
+      [
+        "highlights as objects",
+        { experience: [{ company: "Acme", role: "Dev", highlights: [{ text: "Shipped v1" }] }] },
+      ],
+      [
+        "highlights as nested arrays",
+        { experience: [{ company: "Acme", role: "Dev", bullet_points: [["a", "b"]] }] },
+      ],
+      ["skills as objects", { skills: [{ name: "React" }, { skill: "Go" }] }],
+      ["socialLinks as arrays", { socialLinks: { linkedin: ["https://linkedin.com/in/x"] } }],
+      [
+        "projects with object techStack",
+        { projects: [{ name: "Pilot", description: "Internal tooling", tech_stack: [{ name: "Next.js" }] }] },
+      ],
+      [
+        "education with object degree",
+        { education: [{ institution: { name: "IIT Delhi" }, degree: { name: "B.Tech" } }] },
+      ],
+    ];
+
+    for (const [label, output] of hostileShapes) {
+      assert(
+        buildProfile(normalizeExtractedResume(output)).validateSync() === undefined,
+        `Normalized output for "${label}" satisfies the Profile schema`
+      );
+    }
+
+    // Complete entries must survive normalization untouched.
+    const completeOutput = {
+      name: "Jane Smith",
+      experience: [
+        { company: "Acme", role: "Engineer", duration: "2021 - 2024", highlights: ["Shipped v1"] },
+      ],
+      projects: [{ name: "Atlas", description: "Internal tooling platform", techStack: ["Go"] }],
+      education: [{ institution: "NIT Trichy", degree: "B.Tech CSE", year: "2021" }],
+      skills: ["Go"],
+    };
+
+    const complete = normalizeExtractedResume(completeOutput);
+    assert(
+      complete.experience.length === 1 && complete.projects.length === 1 && complete.education.length === 1,
+      "Keeps fully populated experience, project, and education entries"
+    );
+    assert(
+      complete.projects[0].techStack[0] === "Go" && complete.education[0].degree === "B.Tech CSE",
+      "Preserves techStack and degree values during normalization"
+    );
   }
 
   console.log("\n==================================================");

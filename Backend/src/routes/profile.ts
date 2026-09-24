@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, RequestHandler } from "express";
 import multer from "multer";
 import { Profile } from "../models/Profile";
 import { Kit } from "../models/Kit";
@@ -8,10 +8,13 @@ import { extractTextFromBuffer } from "../pipeline/stages/extractFileText";
 
 const router = Router();
 
-/* ── Multer: in-memory file storage (no disk, 8 MB cap) ─────── */
+/* ── Multer: in-memory file storage (no disk) ───────────────── */
+/* Matches the "Up to 15MB" promise shown in the onboarding UI. */
+const MAX_RESUME_BYTES = 15 * 1024 * 1024;
+
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 8 * 1024 * 1024 },
+  limits: { fileSize: MAX_RESUME_BYTES },
   fileFilter: (_req, file, cb) => {
     const allowed = [
       "application/pdf",
@@ -28,6 +31,28 @@ const upload = multer({
     }
   },
 });
+
+/**
+ * Multer reports size/type failures as errors rather than responses, which
+ * would reach Express' default handler as an HTML 500. Translate them to JSON
+ * so the client can surface the actual reason.
+ */
+const resumeUpload: RequestHandler = (req, res, next) => {
+  upload.single("resume")(req, res, (err: unknown) => {
+    if (!err) {
+      next();
+      return;
+    }
+    const tooLarge = err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE";
+    res.status(tooLarge ? 413 : 400).json({
+      error: tooLarge
+        ? `Resume file is too large. Maximum size is ${MAX_RESUME_BYTES / (1024 * 1024)}MB.`
+        : err instanceof Error
+        ? err.message
+        : "Failed to upload resume",
+    });
+  });
+};
 
 /* ─────────────────────────────────────────────────────────────
    GET /api/profile — fetch authenticated user's profile
@@ -83,7 +108,7 @@ router.get("/", requireAuth, async (req: Request, res: Response) => {
 router.post(
   "/resume/file",
   requireAuth,
-  upload.single("resume"),
+  resumeUpload,
   async (req: Request, res: Response) => {
     try {
       const userId = req.user!.uid;

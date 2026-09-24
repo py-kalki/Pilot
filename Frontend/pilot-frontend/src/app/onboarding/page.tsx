@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -54,12 +55,30 @@ const JOB_SUGGESTIONS = [
   "Fullstack Developer",
 ];
 
+/* ── Parse-error messaging ─────────────────────────────────── */
+/**
+ * Surfaces the API's own message (size limit, unreadable file, …) when there is
+ * one — the generic copy previously hid every failure behind a single line.
+ */
+function readableParseError(err: unknown): string {
+  const message = err instanceof Error ? err.message : "";
+  if (!message || message === "Network error" || message === "Failed to fetch") {
+    return "Could not reach the ATS parser. Please try again, or paste your resume text below.";
+  }
+  return message;
+}
+
 /* ── Custom Theme DatePicker Component ──────────────────────── */
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
 ];
 const DAY_NAMES = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
+/* Calendar popup metrics — used to decide whether to drop below or flip above
+   the input, and to keep the popup inside the viewport. */
+const POPUP_HEIGHT = 356;
+const POPUP_GAP = 8;
 
 function CustomDatePicker({
   value,
@@ -72,6 +91,8 @@ function CustomDatePicker({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
+  const [popupPos, setPopupPos] = useState<{ top: number; left: number; width: number } | null>(null);
 
   const parsedDate = value ? new Date(value + "T00:00:00") : null;
   const initialYear = parsedDate ? parsedDate.getFullYear() : 2000;
@@ -80,11 +101,45 @@ function CustomDatePicker({
   const [viewYear, setViewYear] = useState(initialYear);
   const [viewMonth, setViewMonth] = useState(initialMonth);
 
+  /* The popup is rendered in a portal with `position: fixed` so the onboarding
+     card's `overflow: auto` (and the page's `overflow: hidden`) can no longer
+     clip it — previously the calendar overflowed the card's top edge and the
+     month/year selects were unreachable. */
+  const updatePosition = useCallback(() => {
+    const trigger = containerRef.current;
+    if (!trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const openUp = spaceBelow < POPUP_HEIGHT + POPUP_GAP && spaceAbove > spaceBelow;
+    const desiredTop = openUp ? rect.top - POPUP_HEIGHT - POPUP_GAP : rect.bottom + POPUP_GAP;
+    const top = Math.min(
+      Math.max(POPUP_GAP, desiredTop),
+      Math.max(POPUP_GAP, window.innerHeight - POPUP_HEIGHT - POPUP_GAP)
+    );
+    const left = Math.min(
+      Math.max(POPUP_GAP, rect.left),
+      Math.max(POPUP_GAP, window.innerWidth - rect.width - POPUP_GAP)
+    );
+    // Bail out when nothing moved so scroll listeners don't re-render constantly.
+    setPopupPos((prev) =>
+      prev && prev.top === top && prev.left === left && prev.width === rect.width
+        ? prev
+        : { top, left, width: rect.width }
+    );
+  }, []);
+
+  function togglePopup() {
+    if (!isOpen) updatePosition();
+    setIsOpen((prev) => !prev);
+  }
+
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
+      const target = e.target as Node;
+      if (containerRef.current?.contains(target)) return;
+      if (popupRef.current?.contains(target)) return;
+      setIsOpen(false);
     }
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
@@ -93,6 +148,18 @@ function CustomDatePicker({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleReflow = () => updatePosition();
+    // `capture: true` so scrolling the inner onboarding card also repositions.
+    window.addEventListener("scroll", handleReflow, true);
+    window.addEventListener("resize", handleReflow);
+    return () => {
+      window.removeEventListener("scroll", handleReflow, true);
+      window.removeEventListener("resize", handleReflow);
+    };
+  }, [isOpen, updatePosition]);
 
   useEffect(() => {
     if (value) {
@@ -149,7 +216,7 @@ function CustomDatePicker({
           readOnly
           value={formattedDisplay}
           placeholder="Select date of birth"
-          onClick={() => setIsOpen((prev) => !prev)}
+          onClick={togglePopup}
           className="input-field"
           style={{
             paddingRight: "3.2rem",
@@ -166,7 +233,7 @@ function CustomDatePicker({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            setIsOpen((prev) => !prev);
+            togglePopup();
           }}
           style={{
             position: "absolute",
@@ -189,21 +256,26 @@ function CustomDatePicker({
         </button>
       </div>
 
-      {isOpen && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "calc(100% + 8px)",
-            left: 0,
-            right: 0,
-            zIndex: 60,
-            backgroundColor: "#FFFFFF",
-            border: "1px solid #E2DDD6",
-            borderRadius: "14px",
-            boxShadow: "0 14px 36px -4px rgba(38,34,30,0.16), 0 4px 12px -2px rgba(38,34,30,0.08)",
-            padding: "1.1rem",
-          }}
-        >
+      {isOpen &&
+        popupPos &&
+        createPortal(
+          <div
+            ref={popupRef}
+            style={{
+              position: "fixed",
+              top: popupPos.top,
+              left: popupPos.left,
+              width: popupPos.width,
+              zIndex: 90,
+              backgroundColor: "#FFFFFF",
+              border: "1px solid #E2DDD6",
+              borderRadius: "14px",
+              boxShadow: "0 14px 36px -4px rgba(38,34,30,0.16), 0 4px 12px -2px rgba(38,34,30,0.08)",
+              padding: "1.1rem",
+              maxHeight: `calc(100vh - ${POPUP_GAP * 2}px)`,
+              overflowY: "auto",
+            }}
+          >
           <div
             style={{
               display: "flex",
@@ -382,8 +454,9 @@ function CustomDatePicker({
               );
             })}
           </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
     </div>
   );
 }
@@ -476,7 +549,7 @@ export default function OnboardingPage() {
       }
     } catch (err: unknown) {
       console.warn("ATS Parser warning:", err);
-      setParseError("Could not fully parse document. You can also paste your resume text below.");
+      setParseError(readableParseError(err));
     } finally {
       setIsParsingResume(false);
     }
@@ -506,7 +579,7 @@ export default function OnboardingPage() {
       }
     } catch (err: unknown) {
       console.error("Paste parse error:", err);
-      setParseError("Failed to parse resume text. Please check your content and retry.");
+      setParseError(readableParseError(err));
     } finally {
       setIsParsingResume(false);
     }
