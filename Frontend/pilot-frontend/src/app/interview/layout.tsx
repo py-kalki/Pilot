@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
+import { api } from "@/lib/api";
 
 const NAV_ITEMS = [
   {
@@ -42,14 +43,30 @@ const NAV_ITEMS = [
 export default function InterviewLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [checkingOnboarding, setCheckingOnboarding] = useState(true);
 
   useEffect(() => {
     if (!loading && !user) {
       router.push("/login");
+      return;
+    }
+
+    if (user) {
+      api.profile.get()
+        .then((res) => {
+          if (!res?.profile?.onboardingCompleted) {
+            router.push("/onboarding");
+          } else {
+            setCheckingOnboarding(false);
+          }
+        })
+        .catch(() => {
+          setCheckingOnboarding(false);
+        });
     }
   }, [user, loading, router]);
 
-  if (loading || !user) {
+  if (loading || !user || checkingOnboarding) {
     return (
       <div style={{
         minHeight: "100vh", backgroundColor: "var(--color-cream)",

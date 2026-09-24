@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import multer from "multer";
 import { Profile } from "../models/Profile";
+import { Kit } from "../models/Kit";
 import { requireAuth } from "../middleware/auth";
 import { parseResumeText } from "../pipeline/stages/parseResume";
 import { extractTextFromBuffer } from "../pipeline/stages/extractFileText";
@@ -37,6 +38,8 @@ router.get("/", requireAuth, async (req: Request, res: Response) => {
     let profile = await Profile.findOne({ userId });
 
     if (!profile) {
+      // Check if user previously created kits before profiles were tracked
+      const hasKits = await Kit.exists({ userId });
       profile = await Profile.create({
         userId,
         email: req.user!.email || "",
@@ -46,7 +49,23 @@ router.get("/", requireAuth, async (req: Request, res: Response) => {
         projects: [],
         education: [],
         socialLinks: {},
+        onboardingCompleted: Boolean(hasKits),
       });
+    } else if (!profile.onboardingCompleted) {
+      // Existing user detection: check for existing kits, role, location, resume, or skills
+      const hasKits = await Kit.exists({ userId });
+      const isLegacyDone = Boolean(
+        hasKits ||
+        profile.targetRole ||
+        profile.location ||
+        profile.dob ||
+        profile.resume?.fileName ||
+        (profile.skills && profile.skills.length > 0)
+      );
+      if (isLegacyDone) {
+        profile.onboardingCompleted = true;
+        await profile.save();
+      }
     }
 
     res.json({ profile });
@@ -254,16 +273,35 @@ router.post("/resume", requireAuth, async (req: Request, res: Response) => {
 router.put("/", requireAuth, async (req: Request, res: Response) => {
   try {
     const userId = req.user!.uid;
-    const { name, phone, location, targetRole, summary, skills, socialLinks, experience, projects, education } = req.body;
+    const {
+      name,
+      phone,
+      location,
+      dob,
+      targetRole,
+      summary,
+      skills,
+      socialLinks,
+      experience,
+      projects,
+      education,
+      onboardingCompleted,
+    } = req.body;
 
     let profile = await Profile.findOne({ userId });
     if (!profile) {
-      profile = new Profile({ userId, email: req.user!.email || "", name: name || "Candidate" });
+      profile = new Profile({
+        userId,
+        email: req.user!.email || "",
+        name: name || "Candidate",
+        onboardingCompleted: false,
+      });
     }
 
     if (name) profile.name = name;
     if (phone !== undefined) profile.phone = phone;
     if (location !== undefined) profile.location = location;
+    if (dob !== undefined) profile.dob = dob;
     if (targetRole !== undefined) profile.targetRole = targetRole;
     if (summary !== undefined) profile.summary = summary;
     if (Array.isArray(skills)) profile.skills = skills;
@@ -271,6 +309,9 @@ router.put("/", requireAuth, async (req: Request, res: Response) => {
     if (Array.isArray(experience)) profile.experience = experience;
     if (Array.isArray(projects)) profile.projects = projects;
     if (Array.isArray(education)) profile.education = education;
+    if (onboardingCompleted !== undefined) {
+      profile.onboardingCompleted = Boolean(onboardingCompleted);
+    }
 
     await profile.save();
 

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 import { api, UserProfile } from "@/lib/api";
 import {
   FileText,
@@ -389,6 +390,7 @@ function CustomDatePicker({
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
 
   // Step 1 — Personal info
   const [name, setName] = useState("");
@@ -412,6 +414,43 @@ export default function OnboardingPage() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/login");
+      return;
+    }
+
+    if (user) {
+      api.profile.get()
+        .then((res) => {
+          if (res?.profile?.onboardingCompleted) {
+            router.push("/interview");
+            return;
+          }
+          if (res?.profile) {
+            const p = res.profile;
+            if (p.name) setName((prev) => prev || p.name);
+            else if (user.displayName) setName((prev) => prev || user.displayName || "");
+            if (p.dob) setDob((prev) => prev || p.dob || "");
+            if (p.targetRole) setJobRole((prev) => prev || p.targetRole || "");
+            if (p.location) setLocation((prev) => prev || p.location || "");
+            if (p.resume) {
+              setParsedProfile(p);
+              if (p.resume.fileName) setResumeFileName(p.resume.fileName);
+              if (p.resume.rawText) setResumeText(p.resume.rawText);
+            }
+          } else if (user.displayName) {
+            setName((prev) => prev || user.displayName || "");
+          }
+        })
+        .catch(() => {
+          if (user.displayName) {
+            setName((prev) => prev || user.displayName || "");
+          }
+        });
+    }
+  }, [user, authLoading, router]);
 
   /* ── File Upload Handler ────────────────────────────────── */
   const handleFileUpload = async (file: File) => {
@@ -514,12 +553,13 @@ export default function OnboardingPage() {
   async function handleFinish() {
     setLoading(true);
     try {
-      // If parsedProfile exists or basic info is filled, save final profile
+      // If parsedProfile exists or basic info is filled, save final profile with onboardingCompleted
       await api.profile.update({
         name,
         targetRole: jobRole,
         location,
         dob,
+        onboardingCompleted: true,
       });
       router.push("/interview");
     } catch {
@@ -527,6 +567,32 @@ export default function OnboardingPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  if (authLoading || (!user && authLoading)) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          backgroundColor: "var(--color-cream)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            width: "32px",
+            height: "32px",
+            borderRadius: "50%",
+            border: "2.5px solid var(--color-teal-deep)",
+            borderTopColor: "transparent",
+            animation: "spin 0.7s linear infinite",
+          }}
+        />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
   }
 
   return (
@@ -540,11 +606,43 @@ export default function OnboardingPage() {
         alignItems: "center",
         boxSizing: "border-box",
         padding: "1.5rem 1.5rem 2rem",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
+      {/* ── Illustration Layer (Between background and card overlay, full-bleed left/right) ── */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "-42vh",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 0,
+          pointerEvents: "none",
+          width: "100vw",
+          height: "auto",
+        }}
+      >
+        <Image
+          src="/onboarding1.png"
+          alt=""
+          width={987}
+          height={1188}
+          sizes="100vw"
+          priority
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+          }}
+        />
+      </div>
+
       {/* ── Top Header ───────────────────────────────────────── */}
       <header
         style={{
+          position: "relative",
+          zIndex: 2,
           width: "100%",
           maxWidth: "600px",
           display: "flex",
@@ -568,6 +666,8 @@ export default function OnboardingPage() {
       {/* ── Centered Onboarding Card ─────────────────────────── */}
       <main
         style={{
+          position: "relative",
+          zIndex: 2,
           width: "100%",
           maxWidth: "580px",
           display: "flex",
@@ -631,6 +731,8 @@ export default function OnboardingPage() {
             borderRadius: "20px",
             padding: "2.25rem 2.25rem 2.5rem",
             boxShadow: "0 10px 30px -5px rgba(38,34,30,0.05), 0 4px 10px -2px rgba(38,34,30,0.02)",
+            maxHeight: "calc(100vh - 120px)",
+            overflowY: "auto",
           }}
         >
           {/* Headline and description */}
@@ -970,89 +1072,123 @@ export default function OnboardingPage() {
               )}
 
               {/* Parsing Progress / Live ATS Feedback (Non-blocking background banner) */}
-              {isParsingResume && (
-                <div
-                  style={{
-                    backgroundColor: "rgba(37, 101, 113, 0.08)",
-                    border: "1px solid rgba(37, 101, 113, 0.2)",
-                    borderRadius: "12px",
-                    padding: "0.9rem 1.1rem",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.75rem",
-                  }}
-                >
-                  <Spinner />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <p style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--color-teal-deep)", margin: 0 }}>
-                        ATS Background Parser Active
+              <div
+                style={{
+                  height: isParsingResume ? "auto" : 0,
+                  opacity: isParsingResume ? 1 : 0,
+                  overflow: "hidden",
+                  transition: "height 0.3s ease, opacity 0.25s ease, padding 0.3s ease, margin 0.3s ease",
+                  paddingTop: isParsingResume ? "0.9rem" : 0,
+                  paddingBottom: isParsingResume ? "0.9rem" : 0,
+                  marginBottom: isParsingResume ? "0.5rem" : 0,
+                }}
+              >
+                {isParsingResume && (
+                  <div
+                    style={{
+                      backgroundColor: "rgba(37, 101, 113, 0.08)",
+                      border: "1px solid rgba(37, 101, 113, 0.2)",
+                      borderRadius: "12px",
+                      padding: "0.9rem 1.1rem",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.75rem",
+                    }}
+                  >
+                    <Spinner />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <p style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--color-teal-deep)", margin: 0 }}>
+                          ATS Background Parser Active
+                        </p>
+                        <span style={{ fontSize: "0.7rem", backgroundColor: "rgba(37, 101, 113, 0.15)", color: "var(--color-teal-deep)", padding: "0.15rem 0.5rem", borderRadius: "999px", fontWeight: 600 }}>
+                          Non-blocking
+                        </span>
+                      </div>
+                      <p style={{ fontSize: "0.75rem", color: "var(--color-text-muted)", margin: "0.15rem 0 0" }}>
+                        Extracting work history, skills, phone, and projects in background. You can advance immediately — details will appear in your account!
                       </p>
-                      <span style={{ fontSize: "0.7rem", backgroundColor: "rgba(37, 101, 113, 0.15)", color: "var(--color-teal-deep)", padding: "0.15rem 0.5rem", borderRadius: "999px", fontWeight: 600 }}>
-                        Non-blocking
-                      </span>
                     </div>
-                    <p style={{ fontSize: "0.75rem", color: "var(--color-text-muted)", margin: "0.15rem 0 0" }}>
-                      Extracting work history, skills, phone, and projects in background. You can advance immediately — details will appear in your account!
-                    </p>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
 
               {/* Parsed Extraction Success Pill */}
-              {parsedProfile && !isParsingResume && (
-                <div
-                  style={{
-                    backgroundColor: "rgba(35, 62, 43, 0.06)",
-                    border: "1px solid rgba(35, 62, 43, 0.2)",
-                    borderRadius: "12px",
-                    padding: "1rem",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.5rem",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <CheckCircle2 size={16} color="var(--color-forest)" />
-                    <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--color-forest)" }}>
-                      ATS Information Successfully Extracted
-                    </span>
-                  </div>
+              <div
+                style={{
+                  height: parsedProfile && !isParsingResume ? "auto" : 0,
+                  opacity: parsedProfile && !isParsingResume ? 1 : 0,
+                  overflow: "hidden",
+                  transition: "height 0.35s ease, opacity 0.3s ease, padding 0.35s ease, margin 0.35s ease",
+                  paddingTop: parsedProfile && !isParsingResume ? "1rem" : 0,
+                  paddingBottom: parsedProfile && !isParsingResume ? "1rem" : 0,
+                  marginBottom: parsedProfile && !isParsingResume ? "0.5rem" : 0,
+                }}
+              >
+                {parsedProfile && !isParsingResume && (
+                  <div
+                    style={{
+                      backgroundColor: "rgba(35, 62, 43, 0.06)",
+                      border: "1px solid rgba(35, 62, 43, 0.2)",
+                      borderRadius: "12px",
+                      padding: "1rem",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                      <CheckCircle2 size={16} color="var(--color-forest)" />
+                      <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--color-forest)" }}>
+                        ATS Information Successfully Extracted
+                      </span>
+                    </div>
 
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", fontSize: "0.75rem" }}>
-                    {parsedProfile.phone && (
-                      <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
-                        📞 {parsedProfile.phone}
-                      </span>
-                    )}
-                    {parsedProfile.socialLinks?.linkedin && (
-                      <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
-                        🔗 LinkedIn Linked
-                      </span>
-                    )}
-                    {parsedProfile.skills?.length > 0 && (
-                      <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
-                        ⚡ {parsedProfile.skills.length} Skills Cataloged
-                      </span>
-                    )}
-                    {parsedProfile.experience?.length > 0 && (
-                      <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
-                        💼 {parsedProfile.experience.length} Positions Structured
-                      </span>
-                    )}
-                    {parsedProfile.projects?.length > 0 && (
-                      <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
-                        🚀 {parsedProfile.projects.length} Projects Analyzed
-                      </span>
-                    )}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", fontSize: "0.75rem" }}>
+                      {parsedProfile.phone && (
+                        <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
+                          📞 {parsedProfile.phone}
+                        </span>
+                      )}
+                      {parsedProfile.socialLinks?.linkedin && (
+                        <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
+                          🔗 LinkedIn Linked
+                        </span>
+                      )}
+                      {parsedProfile.skills?.length > 0 && (
+                        <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
+                          ⚡ {parsedProfile.skills.length} Skills Cataloged
+                        </span>
+                      )}
+                      {parsedProfile.experience?.length > 0 && (
+                        <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
+                          💼 {parsedProfile.experience.length} Positions Structured
+                        </span>
+                      )}
+                      {parsedProfile.projects?.length > 0 && (
+                        <span style={{ backgroundColor: "#fff", padding: "0.2rem 0.5rem", borderRadius: "6px", border: "1px solid #E2DDD6" }}>
+                          🚀 {parsedProfile.projects.length} Projects Analyzed
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
 
               {parseError && (
-                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#B04040", fontSize: "0.8rem" }}>
-                  <AlertCircle size={14} />
-                  <span>{parseError}</span>
+                <div
+                  style={{
+                    height: parseError ? "auto" : 0,
+                    opacity: parseError ? 1 : 0,
+                    overflow: "hidden",
+                    transition: "height 0.25s ease, opacity 0.2s ease",
+                    marginBottom: parseError ? "0.5rem" : 0,
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#B04040", fontSize: "0.8rem" }}>
+                    <AlertCircle size={14} />
+                    <span>{parseError}</span>
+                  </div>
                 </div>
               )}
 
@@ -1210,6 +1346,8 @@ export default function OnboardingPage() {
       {/* ── Footer ───────────────────────────────────────────── */}
       <footer
         style={{
+          position: "relative",
+          zIndex: 2,
           display: "flex",
           gap: "1.5rem",
           alignItems: "center",

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword, updateProfile, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase";
 import { getFirebaseAuthErrorMessage } from "@/lib/auth-errors";
+import { api } from "@/lib/api";
 
 /* ── Inline SVG icons ──────────────────────────────────────── */
 const EyeOpen = () => (
@@ -78,7 +79,6 @@ export default function SignUpPage() {
       router.push("/onboarding");
     } catch (err: any) {
       setError(getFirebaseAuthErrorMessage(err));
-    } finally {
       setLoading(false);
     }
   }
@@ -88,10 +88,18 @@ export default function SignUpPage() {
     setGoogleLoading(true);
     try {
       await signInWithPopup(auth, googleProvider);
-      router.push("/onboarding");
+      try {
+        const res = await api.profile.get();
+        if (res?.profile?.onboardingCompleted) {
+          router.push("/interview");
+        } else {
+          router.push("/onboarding");
+        }
+      } catch {
+        router.push("/onboarding");
+      }
     } catch (err: any) {
       setError(getFirebaseAuthErrorMessage(err));
-    } finally {
       setGoogleLoading(false);
     }
   }
@@ -168,7 +176,7 @@ export default function SignUpPage() {
                 {/* Email */}
                 <div>
                   <label htmlFor="signup-email" className="field-label">Email address</label>
-                  <input id="signup-email" type="email" autoComplete="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="input-field" required disabled={loading} />
+                  <input id="signup-email" type="email" autoComplete="off" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="input-field" required disabled={loading} />
                 </div>
 
                 {/* Password */}
@@ -262,7 +270,7 @@ export default function SignUpPage() {
       >
         {/* Full-bleed painting */}
         <Image
-          src="/login-image.png"
+          src="/sign-up.png"
           alt="Renaissance scholar — the spirit of deep preparation"
           fill
           sizes="50vw"

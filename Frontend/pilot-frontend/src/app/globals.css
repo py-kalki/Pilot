@@ -68,7 +68,6 @@ input[type="radio"],
 select,
 summary,
 .cursor-pointer,
-label[for],
 [tabindex]:not([tabindex="-1"]) {
   cursor: url("/macos-cursor.svg") 11 5, pointer !important;
 }

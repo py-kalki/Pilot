@@ -229,6 +229,7 @@ export interface UserProfile {
   education: Education[];
   certifications?: string[];
   resume?: ResumeFile;
+  onboardingCompleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

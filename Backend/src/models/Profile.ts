@@ -55,6 +55,7 @@ export interface IProfile extends Document {
   education: IEducation[];
   certifications?: string[];
   resume?: IResumeFile;
+  onboardingCompleted?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -115,6 +116,7 @@ const ProfileSchema = new Schema<IProfile>(
     education: [EducationSchema],
     certifications: [{ type: String }],
     resume: { type: ResumeFileSchema },
+    onboardingCompleted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

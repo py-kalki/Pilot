@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase";
 import { getFirebaseAuthErrorMessage } from "@/lib/auth-errors";
+import { api } from "@/lib/api";
 
 /* ── Inline SVG icons ──────────────────────────────────────── */
 const EyeOpen = () => (
@@ -31,6 +32,19 @@ export default function LoginPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError]             = useState<string | null>(null);
 
+  async function handleRedirectAfterAuth() {
+    try {
+      const res = await api.profile.get();
+      if (res?.profile?.onboardingCompleted) {
+        router.push("/interview");
+      } else {
+        router.push("/onboarding");
+      }
+    } catch {
+      router.push("/onboarding");
+    }
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
@@ -41,10 +55,9 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email.trim(), password);
-      router.push("/interview");
+      await handleRedirectAfterAuth();
     } catch (err: any) {
       setError(getFirebaseAuthErrorMessage(err));
-    } finally {
       setLoading(false);
     }
   }
@@ -54,10 +67,9 @@ export default function LoginPage() {
     setGoogleLoading(true);
     try {
       await signInWithPopup(auth, googleProvider);
-      router.push("/interview");
+      await handleRedirectAfterAuth();
     } catch (err: any) {
       setError(getFirebaseAuthErrorMessage(err));
-    } finally {
       setGoogleLoading(false);
     }
   }
@@ -128,17 +140,17 @@ export default function LoginPage() {
                 {/* Email */}
                 <div>
                   <label htmlFor="login-email" className="field-label">Email address</label>
-                  <input
-                    id="login-email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="input-field"
-                    required
-                    disabled={loading}
-                  />
+<input
+                      id="login-email"
+                      type="email"
+                      autoComplete="off"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="input-field"
+                      required
+                      disabled={loading}
+                    />
                 </div>
 
                 {/* Password */}
