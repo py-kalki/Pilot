@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
+  <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-cream: #FAF9F5;
+      --color-ink: #2B2B29;
+      --color-text-muted: #7A7670;
+      --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      height: 100%;
+      background-color: var(--color-cream);
+      color: var(--color-ink);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    .page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 2.5rem 1rem;
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .logo-link {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .logo-img {
+      object-fit: contain;
+      filter: brightness(0);
+      height: 32px;
+      width: auto;
+      display: block;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1rem 2rem;
+      user-select: none;
+    }
+    .error-title {
+      font-family: var(--font-serif);
+      font-size: clamp(4.5rem, 16vw, 17rem);
+      font-weight: 400;
+      font-style: normal;
+      color: var(--color-ink);
+      margin: 0;
+      line-height: 1.1;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      text-align: center;
+    }
+    footer {
+      padding: 1.5rem 3rem 2.5rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .footer-left {
+      max-width: 420px;
+    }
+    .brand-tag {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin: 0 0 0.5rem;
+    }
+    .detour-text {
+      font-family: var(--font-sans);
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--color-ink);
+      line-height: 1.45;
+      margin: 0 0 1.25rem;
+    }
+    .btn-primary {
+      text-decoration: none;
+      padding: 0.65rem 1.6rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-radius: 999px;
+      background-color: var(--color-ink);
+      color: var(--color-cream);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    .footer-right {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      padding-bottom: 0.25rem;
+    }
+    .util-link {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-family: var(--font-sans);
+      letter-spacing: 0.04em;
+      transition: color 0.2s ease;
+    }
+    .util-link:hover {
+      color: var(--color-ink);
+      text-decoration: underline;
+    }
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1.5rem 0.5rem;
+      }
+      footer {
+        padding: 1.5rem 1.5rem 2rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <!-- Top bar — logo centered -->
+    <header>
+      <a href="/" class="logo-link">
+        <img src="/pilot-logo.png" alt="Pilot" class="logo-img">
+      </a>
+    </header>
+
+    <!-- Centerpiece — massive editorial serif "Error 404" -->
+    <main>
+      <h1 class="error-title">Error 404</h1>
+    </main>
+
+    <!-- Bottom Section — copy on left, links on right -->
+    <footer>
+      <!-- Left — brand info & redirect button -->
+      <div class="footer-left">
+        <p class="brand-tag">Pilot · Creative Intelligence</p>
+        <p class="detour-text">Whoops! It seems like you've taken a detour into the digital wilderness.</p>
+        <a href="/" class="btn-primary">
+          HOME <span style="font-size: 0.95rem;">→</span>
+        </a>
+      </div>
+
+      <!-- Right — utility links -->
+      <div class="footer-right">
+        <a href="/privacy" class="util-link">Privacy</a>
+        <a href="/terms" class="util-link">Terms</a>
+        <a href="mailto:support@usepilot.cfd" class="util-link">Help</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
